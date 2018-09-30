@@ -49,7 +49,9 @@
         ],
         "one-variable-per-declaration": [
             false
-        ]
+        ],
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
     },
     "rulesDirectory": []
 }
