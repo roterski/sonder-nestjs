@@ -12,7 +12,6 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    debugger;
     return await this.userRepository.find();
   }
 
@@ -21,7 +20,6 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    debugger;
     return await this.userRepository.create(createUserDto);
   }
 }
