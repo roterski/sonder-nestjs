@@ -15,4 +15,6 @@ export class User {
   @Column()
   facebookId: string;
 
+  @Column()
+  token: string;
 }

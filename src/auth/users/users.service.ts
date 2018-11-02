@@ -22,4 +22,8 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     return await this.userRepository.create(createUserDto);
   }
+
+  async findOneByToken(token: string): Promise<User> {
+    return await this.userRepository.findOne({ token });
+  }
 }
