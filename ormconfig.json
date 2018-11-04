@@ -1,9 +1,9 @@
 {
    "type": "postgres",
    "port": 5432,
-   "username": "sonder_nest",
-   "password": "password",
-   "database": "sonder-api-db",
+   "username": "postgres",
+   "password": "postgres",
+   "database": "sonder_api_dev",
    "synchronize": true,
    "logging": false,
    "entities": [
