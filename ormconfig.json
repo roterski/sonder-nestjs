@@ -3,7 +3,7 @@
    "port": 5432,
    "username": "postgres",
    "password": "postgres",
-   "database": "sonder_api_dev",
+   "database": "sonder_api_nest_dev",
    "synchronize": true,
    "logging": false,
    "entities": [
