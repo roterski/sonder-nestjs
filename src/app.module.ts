@@ -3,8 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { join } from 'path';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { join } from 'path';
       },
     }),
     TypeOrmModule.forRoot(),
-    AuthModule
+    AuthModule,
+    PostsModule
   ],
   controllers: [AppController],
   providers: [AppService],
