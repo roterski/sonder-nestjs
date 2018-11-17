@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { Observable, from, of } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UsersService {
@@ -24,16 +27,16 @@ export class UsersService {
     return await this.userRepository.create(createUserDto);
   }
 
-  async getOrCreate(data: any): Promise<User> {
-    let user = await this.userRepository.findOne({ facebookId: data.id})
+  getOrCreate(createUserDto: CreateUserDto, findBy: string[]): Observable<User> {
+    const newUser$ = of(User.create(createUserDto))
+      .pipe(
+        switchMap(user => user.save())
+      );
 
-    if (user) { return user }
-
-    return await this.userRepository.create({
-      facebookId: data.id,
-      firstName: data.first_name,
-      email: data.email,
-    });
+    return from(User.findOne(_.pick(createUserDto, findBy)))
+      .pipe(
+        switchMap((user) => user ? of(user) : newUser$)
+      );
   }
 
   async findOneByJwtPayload(payload: JwtPayload): Promise<User> {
