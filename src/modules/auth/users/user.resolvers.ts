@@ -1,7 +1,9 @@
 import { ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { User } from '../../graphql.schema';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { User } from './user.entity';
 import { UsersGuard } from './users.guard';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,10 +29,10 @@ export class UsersResolvers {
   }
 
   @Mutation('createUser')
-  async create( @Args('createUserInput') args: CreateUserDto): Promise<User> {
-    const createdUser = await this.usersService.create(args);
-    pubSub.publish('userCreated', { userCreated: createdUser });
-    return createdUser;
+  create( @Args('createUserInput') args: CreateUserDto): Observable<User> {
+    return this.usersService.create(args).pipe(
+      tap((createdUser) => pubSub.publish('userCreated', { userCreated: createdUser }))
+    );
   }
 
   @Subscription('userCreated')
