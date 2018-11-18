@@ -12,14 +12,6 @@ export class User extends BaseEntity {
   @Column()
   firstName: string;
 
-  // @Column()
-  // lastName: string;
-
   @Column()
   facebookId: string;
-
-  // @Column({
-  //   nullable: true
-  // })
-  // token: string;
 }

@@ -23,19 +23,17 @@ export class UsersService {
     return await this.userRepository.findOne(id);
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    return await this.userRepository.create(createUserDto);
+  create(createUserDto: CreateUserDto): Observable<User> {
+    return of(User.create(createUserDto))
+      .pipe(
+        switchMap((user) => user.save())
+      );
   }
 
   getOrCreate(createUserDto: CreateUserDto, findBy: string[]): Observable<User> {
-    const newUser$ = of(User.create(createUserDto))
-      .pipe(
-        switchMap(user => user.save())
-      );
-
     return from(User.findOne(_.pick(createUserDto, findBy)))
       .pipe(
-        switchMap((user) => user ? of(user) : newUser$)
+        switchMap((user) => user ? of(user) : this.create(createUserDto))
       );
   }
 

@@ -15,31 +15,29 @@ export class AuthService {
   ) { }
 
   authenticateWithFacebook(fbAccessToken: string): Observable<string> {
-    return this.httpService.get('https://graph.facebook.com/v2.9/me', {
-      params: {
-        access_token: fbAccessToken,
-        fields: this.requestedFields().join(',')
-      }
-    }).pipe(
-      map((response: AxiosRequestConfig) => response.data),
-      map((data) => ({
-        facebookId: data.id,
-        firstName: data.first_name,
-        email: data.email
-      })),
-      switchMap((dto: CreateUserDto) => this.usersService.getOrCreate(dto, ['facebookId'])),
-      map((user: User) => {
-        const { id, email } = user;
-        return this.jwtService.sign({ id, email });
-      })
-    )
+    const params = {
+      access_token: fbAccessToken,
+      fields: ['id', 'first_name', 'age_range', 'cover', 'email', 'picture'].join(',')
+    };
+
+    return this.httpService
+      .get('https://graph.facebook.com/v2.9/me', { params })
+      .pipe(
+        map((response: AxiosRequestConfig) => response.data),
+        map((data) => ({
+          facebookId: data.id,
+          firstName: data.first_name,
+          email: data.email
+        })),
+        switchMap((dto: CreateUserDto) => this.usersService.getOrCreate(dto, ['facebookId'])),
+        map((user: User) => {
+          const { id, email } = user;
+          return this.jwtService.sign({ id, email });
+        })
+      )
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {
     return await this.usersService.findOneByJwtPayload(payload);
-  }
-
-  private requestedFields(): string[] {
-    return ['id', 'first_name', 'age_range', 'cover', 'email', 'picture'];
   }
 }

@@ -6,10 +6,12 @@ import { User } from './users/user.entity';
 import { JwtStrategy } from './jwt-strategy';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
+    PassportModule.register({ defaultStrategy: 'jwt'}),
     JwtModule.register({
       secretOrPrivateKey: 'secretKey',
       signOptions: {
