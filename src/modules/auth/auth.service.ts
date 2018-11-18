@@ -1,7 +1,7 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { UsersService, User, CreateUserDto } from './users';
+import { UsersService, User, CreateUserDto } from '../users';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
