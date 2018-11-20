@@ -26,7 +26,7 @@ export class PostsService {
   create(createPostDto: CreatePostDto): Observable<Post> {
     return of(Post.create(createPostDto))
       .pipe(
-        switchMap((user) => user.save())
+        switchMap((post) => post.save())
       );
   }
 }

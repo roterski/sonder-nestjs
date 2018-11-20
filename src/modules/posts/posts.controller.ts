@@ -8,9 +8,7 @@ import { map } from 'rxjs/operators';
 @Controller('posts')
 @UseGuards(AuthGuard())
 export class PostsController {
-  constructor(
-    private readonly postService: PostsService
-  ) {}
+  constructor(private readonly postService: PostsService) {}
 
   @Get()
   index(@Req() request): Observable<any> {
@@ -23,11 +21,11 @@ export class PostsController {
   }
 
   @Post()
-  create(@Body('post') postBody): Observable<any> {
-    return this.postService.create(postBody).pipe(
+  create(@Body('post') postParam): Observable<any> {
+    return this.postService.create(postParam).pipe(
       map(post => {
-        debugger
-      })
+        debugger;
+      }),
     );
   }
 }
