@@ -19,8 +19,8 @@ export class PostsService {
     return from(this.postRepository.find());
   }
 
-  async findOneById(id: number): Promise<Post> {
-    return await this.postRepository.findOne(id);
+  findOneById(id: number): Observable<Post> {
+    return from(this.postRepository.findOne(id));
   }
 
   create(createPostDto: CreatePostDto): Observable<Post> {
