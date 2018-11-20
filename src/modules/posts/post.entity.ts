@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, OneToMany } from "typeorm";
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -14,4 +15,7 @@ export class Post extends BaseEntity {
 
   @Column()
   points: number;
+
+  @OneToMany(type => Comment, comment => comment.post)
+  comments: Comment[];
 }
