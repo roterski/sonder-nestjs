@@ -5,7 +5,7 @@ import { Post } from './post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -26,7 +26,13 @@ export class PostsService {
   create(createPostDto: CreatePostDto): Observable<Post> {
     return of(Post.create(createPostDto))
       .pipe(
-        switchMap((post) => post.save())
+        switchMap((post) => {
+          return post.save()
+        }),
+        // catchError((err) => {
+        //   debugger
+        //   return of(err);
+        // })
       );
   }
 }
