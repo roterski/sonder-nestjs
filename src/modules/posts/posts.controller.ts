@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Controller('posts')
 @UseGuards(AuthGuard())
@@ -12,7 +12,9 @@ export class PostsController {
 
   @Get()
   index(@Req() request): Observable<any> {
-    return this.postService.findAll();
+    return this.postService.findAll().pipe(
+      map((posts) => ({ data: { posts, page: 1 } }))
+    );
   }
 
   @Get(':id')
@@ -23,7 +25,7 @@ export class PostsController {
   @Post()
   create(@Body('post') postParam): Observable<any> {
     return this.postService.create(postParam).pipe(
-      map(post => {
+      tap(post => {
         debugger;
       }),
     );

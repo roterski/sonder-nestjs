@@ -13,7 +13,7 @@ export class Post extends BaseEntity {
   @Column()
   body: string;
 
-  @Column()
+  @Column({ default: 0 })
   points: number;
 
   @OneToMany(type => Comment, comment => comment.post)
