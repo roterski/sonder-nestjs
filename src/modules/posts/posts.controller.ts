@@ -13,7 +13,15 @@ export class PostsController {
   @Get()
   index(@Req() request): Observable<any> {
     return this.postService.findAll().pipe(
-      map((posts) => ({ data: { posts, page: 1 } }))
+      map((posts) => (
+        {
+          data: posts,
+          page: 1,
+          perPage: posts.length,
+          totalEntries: posts.length,
+          totalPages: 1
+        }
+      ))
     );
   }
 

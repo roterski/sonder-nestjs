@@ -14,7 +14,13 @@ export class CommentsController {
 
   @Get('posts/:postId/comments')
   index(@Param() params): Observable<any> {
-    return this.commentsService.findByPost(params.postId);
+    return this.commentsService.findByPost(params.postId).pipe(
+      map((comments) => (
+        {
+          data: comments
+        }
+      ))
+    );
   }
 
   @Post('posts/:postId/comments')
