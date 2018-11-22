@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
