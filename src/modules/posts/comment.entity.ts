@@ -3,17 +3,16 @@ import { Post } from './post.entity';
 
 @Entity()
 export class Comment extends BaseEntity {
-
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column('simple-array')
-  parent_ids: number[];
+  @Column('simple-array', { default: [] })
+  parentIds: number[];
 
   @Column()
   body: string;
 
-  @Column()
+  @Column({ default: 0 })
   points: number;
 
   @ManyToOne(type => Post, post => post.comments)

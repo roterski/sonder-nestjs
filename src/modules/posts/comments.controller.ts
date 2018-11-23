@@ -25,6 +25,8 @@ export class CommentsController {
 
   @Post('posts/:postId/comments')
   create(@Body('comment') commentParam): Observable<any> {
-    return this.commentsService.create(commentParam);
+    return this.commentsService.create(commentParam).pipe(
+      map((comment) => ({ data: comment }))
+    );
   }
 }

@@ -27,7 +27,9 @@ export class PostsController {
 
   @Get(':id')
   show(@Param() params): Observable<any> {
-    return this.postService.findOneById(params.id);
+    return this.postService.findOneById(params.id).pipe(
+      map(post => ({ data: post })),
+    );
   }
 
   @Post()
