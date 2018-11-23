@@ -33,9 +33,7 @@ export class PostsController {
   @Post()
   create(@Body('post') postParam): Observable<any> {
     return this.postService.create(postParam).pipe(
-      tap(post => {
-        debugger;
-      }),
+      map(post => ({ data: post })),
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Post } from './post.entity';
 
 @Entity()
@@ -17,5 +17,6 @@ export class Comment extends BaseEntity {
   points: number;
 
   @ManyToOne(type => Post, post => post.comments)
+  @JoinColumn()
   post: Post;
 }
