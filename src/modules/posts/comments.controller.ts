@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Observable } from 'rxjs';
 import { CommentsService } from './comments.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Controller()
 @UseGuards(AuthGuard())
@@ -15,17 +15,16 @@ export class CommentsController {
   @Get('posts/:postId/comments')
   index(@Param() params): Observable<any> {
     return this.commentsService.findByPost(params.postId).pipe(
-      map((comments) => (
-        {
-          data: comments
-        }
-      ))
+      map((comments) => ({ data: comments }))
     );
   }
 
   @Post('posts/:postId/comments')
-  create(@Body('comment') commentParam): Observable<any> {
-    return this.commentsService.create(commentParam).pipe(
+  create(@Body('comment') commentParam, @Param() params): Observable<any> {
+    return this.commentsService.create({
+      ...commentParam,
+      postId: params.postId,
+    }).pipe(
       map((comment) => ({ data: comment }))
     );
   }

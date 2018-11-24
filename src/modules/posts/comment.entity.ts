@@ -16,6 +16,8 @@ export class Comment extends BaseEntity {
   points: number;
 
   @ManyToOne(type => Post, post => post.comments)
-  @JoinColumn()
+  @JoinColumn({ name: 'postId' })
   post: Post;
+  @Column('int', { nullable: true })
+  postId: number;
 }
