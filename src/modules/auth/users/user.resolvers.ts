@@ -15,7 +15,6 @@ export class UsersResolvers {
   constructor(private readonly usersService: UsersService) { }
 
   @Query()
-  @UseGuards(UsersGuard)
   async getUsers(): Promise<User[]> {
     return await this.usersService.findAll();
   }
