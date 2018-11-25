@@ -15,6 +15,7 @@ import { PostsModule } from './modules/posts/posts.module';
         path: join(process.cwd(), 'src/graphql.schema.ts'),
         outputAs: 'class',
       },
+      context: ({ req }) => ({ req }),
     }),
     TypeOrmModule.forRoot(),
     AuthModule,

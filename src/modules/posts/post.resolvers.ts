@@ -4,18 +4,18 @@ import { PubSub } from 'graphql-subscriptions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Post } from './post.entity';
-import { PostsGuard } from './posts.guard';
+import { GqlAuthGuard } from '../auth/graphql-auth.guard';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 
 const pubSub = new PubSub();
 
 @Resolver('Post')
+@UseGuards(GqlAuthGuard)
 export class PostsResolvers {
   constructor(private readonly postsService: PostsService) { }
 
-  @Query('getPosts')
-  @UseGuards(PostsGuard)
+  @Query('posts')
   getPosts(): Observable<Post[]> {
     return this.postsService.findAll();
   }
