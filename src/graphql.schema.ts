@@ -23,7 +23,7 @@ export class Post {
 export abstract class IQuery {
     abstract getUsers(): User[] | Promise<User[]>;
 
-    abstract getPosts(): Post[] | Promise<Post[]>;
+    abstract posts(): Post[] | Promise<Post[]>;
 
     abstract post(id?: string): Post | Promise<Post>;
 

@@ -4,12 +4,13 @@ import { PubSub } from 'graphql-subscriptions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User } from './user.entity';
-import { UsersGuard } from './users.guard';
+import { GqlAuthGuard } from '../graphql-auth.guard';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
 const pubSub = new PubSub();
 
+@UseGuards(GqlAuthGuard)
 @Resolver('User')
 export class UsersResolvers {
   constructor(private readonly usersService: UsersService) { }

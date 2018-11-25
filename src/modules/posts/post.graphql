@@ -1,5 +1,5 @@
 type Query {
-  getPosts: [Post]
+  posts: [Post]
   post(id: String): Post
 }
 
