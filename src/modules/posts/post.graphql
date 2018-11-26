@@ -1,6 +1,6 @@
 type Query {
-  posts: [Post]
-  post(id: String): Post
+  getPosts: [Post]
+  getPost(id: String): Post
 }
 
 type Mutation {
@@ -15,7 +15,16 @@ type Post {
   id: Int
   title: String
   body: String
-  points: String
+  points: Int
+  comments: [Comment]
+}
+
+type Comment {
+  id: Int
+  body: String
+  parentIds: [Int]
+  points: Int
+  postId: Int
 }
 
 input CreatePostInput {

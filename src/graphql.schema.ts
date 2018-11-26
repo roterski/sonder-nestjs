@@ -7,6 +7,15 @@ export class CreateUserInput {
     lastName?: string;
 }
 
+export class Comment {
+    id?: number;
+    body?: string;
+    parentIds?: number[];
+    points?: number;
+    postId?: number;
+    children?: Comment[];
+}
+
 export abstract class IMutation {
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
@@ -17,15 +26,16 @@ export class Post {
     id?: number;
     title?: string;
     body?: string;
-    points?: string;
+    points?: number;
+    comments?: Comment[];
 }
 
 export abstract class IQuery {
     abstract getUsers(): User[] | Promise<User[]>;
 
-    abstract posts(): Post[] | Promise<Post[]>;
+    abstract getPosts(): Post[] | Promise<Post[]>;
 
-    abstract post(id?: string): Post | Promise<Post>;
+    abstract getPost(id?: string): Post | Promise<Post>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }
