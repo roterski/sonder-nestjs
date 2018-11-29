@@ -19,14 +19,6 @@ type Post {
   comments: [Comment]
 }
 
-type Comment {
-  id: Int
-  body: String
-  parentIds: [Int]
-  points: Int
-  postId: Int
-}
-
 input CreatePostInput {
   title: String
   body: String
