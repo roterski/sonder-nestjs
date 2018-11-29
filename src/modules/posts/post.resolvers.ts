@@ -9,11 +9,12 @@ import { GqlAuthGuard } from '../auth/graphql-auth.guard';
 import { PostsService } from './posts.service';
 import { CommentsService } from './comments.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { CreateCommentDto } from 'modules/posts/dto/create-comment.dto';
 
 const pubSub = new PubSub();
 
 @Resolver('Post')
-// @UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 export class PostsResolvers {
   constructor(
     private readonly postsService: PostsService,

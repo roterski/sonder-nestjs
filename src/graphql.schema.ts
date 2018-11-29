@@ -1,3 +1,9 @@
+export class CreateCommentInput {
+    body?: string;
+    parentIds?: number[];
+    postId?: number;
+}
+
 export class CreatePostInput {
     title?: string;
     body?: string;
@@ -13,11 +19,12 @@ export class Comment {
     parentIds?: number[];
     points?: number;
     postId?: number;
-    children?: Comment[];
 }
 
 export abstract class IMutation {
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
+
+    abstract createComment(createCommentInput?: CreateCommentInput): Comment | Promise<Comment>;
 
     abstract createPost(createPostInput?: CreatePostInput): Post | Promise<Post>;
 }

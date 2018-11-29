@@ -8,13 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
 import { PostsResolvers } from './post.resolvers';
+import { CommentsResolvers } from './comment.resolvers';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Post, Comment]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  providers: [PostsService, CommentsService, PostsResolvers],
+  providers: [PostsService, CommentsService, PostsResolvers, CommentsResolvers],
   controllers: [PostsController, CommentsController],
 })
 export class PostsModule {}
