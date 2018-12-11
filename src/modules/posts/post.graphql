@@ -1,10 +1,10 @@
 type Query {
   getPosts: [Post]
-  getPost(id: String): Post
+  getPost(id: Int): Post
 }
 
 type Mutation {
-  createPost(createPostInput: CreatePostInput): Post
+  createPost(title: String!, body: String): Post
 }
 
 type Subscription {
@@ -17,9 +17,4 @@ type Post {
   body: String
   points: Int
   comments: [Comment]
-}
-
-input CreatePostInput {
-  title: String
-  body: String
 }

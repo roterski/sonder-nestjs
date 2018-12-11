@@ -1,5 +1,5 @@
 type Mutation {
-  createComment(createCommentInput: CreateCommentInput): Comment
+  createComment(body: String!, postId: Int!, parentIds: [Int]): Comment
 }
 
 type Comment {
@@ -7,11 +7,5 @@ type Comment {
   body: String
   parentIds: [Int]
   points: Int
-  postId: Int
-}
-
-input CreateCommentInput {
-  body: String
-  parentIds: [Int]
   postId: Int
 }

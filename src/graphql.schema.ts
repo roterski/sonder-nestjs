@@ -1,14 +1,3 @@
-export class CreateCommentInput {
-    body?: string;
-    parentIds?: number[];
-    postId?: number;
-}
-
-export class CreatePostInput {
-    title?: string;
-    body?: string;
-}
-
 export class CreateUserInput {
     lastName?: string;
 }
@@ -24,9 +13,9 @@ export class Comment {
 export abstract class IMutation {
     abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract createComment(createCommentInput?: CreateCommentInput): Comment | Promise<Comment>;
+    abstract createComment(body: string, postId: number, parentIds?: number[]): Comment | Promise<Comment>;
 
-    abstract createPost(createPostInput?: CreatePostInput): Post | Promise<Post>;
+    abstract createPost(title: string, body?: string): Post | Promise<Post>;
 }
 
 export class Post {
@@ -42,7 +31,7 @@ export abstract class IQuery {
 
     abstract getPosts(): Post[] | Promise<Post[]>;
 
-    abstract getPost(id?: string): Post | Promise<Post>;
+    abstract getPost(id?: number): Post | Promise<Post>;
 
     abstract temp__(): boolean | Promise<boolean>;
 }

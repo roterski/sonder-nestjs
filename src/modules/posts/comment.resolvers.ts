@@ -21,8 +21,8 @@ export class CommentsResolvers {
   ) { }
 
   @Mutation('createComment')
-  create( @Args('createCommentInput') args: CreateCommentDto): Observable<Comment> {
-    return this.commentsService.create(args).pipe(
+  create(@Args('body') body: string, @Args('postId') postId: number, @Args('parentIds') parentIds: number[]): Observable<Comment> {
+    return this.commentsService.create({ body, postId, parentIds} as CreateCommentDto).pipe(
       tap((createdComment) => pubSub.publish('commentCreated', { commentCreated: createdComment }))
     );
   }
