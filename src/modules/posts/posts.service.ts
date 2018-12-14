@@ -28,11 +28,7 @@ export class PostsService {
       .pipe(
         switchMap((post) => {
           return post.save()
-        }),
-        // catchError((err) => {
-        //   debugger
-        //   return of(err);
-        // })
+        })
       );
   }
 }
