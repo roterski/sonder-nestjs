@@ -3,7 +3,7 @@ import { LoggingInterceptor } from './logging.interceptor';
 
 export const INTERCEPTORS = [
   ExceptionInterceptor,
-  LoggingInterceptor
+  LoggingInterceptor,
 ];
 
 export * from './exception.interceptor';

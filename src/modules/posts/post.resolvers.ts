@@ -10,14 +10,12 @@ import { PostsService } from './posts.service';
 import { CommentsService } from './comments.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { CreateCommentDto } from 'modules/posts/dto/create-comment.dto';
-import { HttpExceptionFilter } from '../../http-exception.filter';
-import { LoggingInterceptor, ExceptionInterceptor } from '../../common/interceptors/'
+import { ExceptionInterceptor } from '../../common/interceptors/'
 
 const pubSub = new PubSub();
 
 @Resolver('Post')
-@UseFilters(new HttpExceptionFilter())
-@UseInterceptors(LoggingInterceptor, ExceptionInterceptor)
+@UseInterceptors(ExceptionInterceptor)
 @UseGuards(GqlAuthGuard)
 export class PostsResolvers {
   constructor(
