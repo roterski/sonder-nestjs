@@ -3,7 +3,7 @@
   "ext": "ts",
   "ignore": [
     "src/**/*.spec.ts",
-    "src/graphql.schema.ts"
+    "src/common/graphql/graphql.schema.ts"
   ],
   "exec": "node --inspect-brk -r ts-node/register src/main.ts"
 }

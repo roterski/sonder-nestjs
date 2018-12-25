@@ -1,8 +1,9 @@
 ## PREPARE before production
 
-`ormconfig.json` -> `"synchronize": false`,
-`src/app.module.ts` -> GraphQLModule options -> `debug: false, playground: false`
-
+- `ormconfig.json` -> `"synchronize": false`,
+- `src/app.module.ts` -> GraphQLModule options -> `debug: false, playground: false`
+- replace hardcoded `secretKey` with env variable ( https://github.com/nestjs-community/nestjs-config )
+- make typeorm config use env variables
 
 ## Installation
 

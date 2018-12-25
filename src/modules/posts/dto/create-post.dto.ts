@@ -1,8 +1,7 @@
 import { Min } from 'class-validator';
-// import { CreateUserInput } from '../../../graphql.schema';
+import { CreatePostInput } from '../../../common/graphql/graphql.schema';
 
-export class CreatePostDto {
+export class CreatePostDto extends CreatePostInput {
   @Min(1)
   title: string;
-  body: string;
 }

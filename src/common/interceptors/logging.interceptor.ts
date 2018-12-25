@@ -18,7 +18,7 @@ export class LoggingInterceptor implements NestInterceptor {
       const elapsed = `+${Date.now() - now} ms`;
       const timestamp = `[${new Date().toISOString()}]`;
 
-      if (req) {
+      if (req && req.method && req.path) {
         console.log(timestamp, `[${req.method}] ${req.path}`, req.params, req.query, anonymize()(req.body), elapsed);
       } else if (graphqlReq) {
         console.log(timestamp, `[${graphqlReq.method}] ${graphqlReq.originalUrl}`, graphqlReq['body']['variables']);

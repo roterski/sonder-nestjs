@@ -9,7 +9,6 @@ import { GqlAuthGuard } from '../auth/graphql-auth.guard';
 import { PostsService } from './posts.service';
 import { CommentsService } from './comments.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { CreateCommentDto } from 'modules/posts/dto/create-comment.dto';
 import { ExceptionInterceptor } from '../../common/interceptors/'
 
 const pubSub = new PubSub();
@@ -25,40 +24,27 @@ export class PostsResolvers {
 
   @Query('getPosts')
   getPosts(): Observable<Post[] | {}> {
-    return this.postsService.findAll().pipe(
-      catchError((err) => {
-        return err;
-      })
-    );
+    return this.postsService.findAll();
   }
 
   @Query('getPost')
-  findOneById(@Args('id') id: number): Observable<Post | {}> {
-    return this.postsService.findOneById(id).pipe(
-      catchError((err) => {
-        return err;
-      })
-    );
+  findOneById(
+    @Args('id')
+    id: number,
+  ): Observable<Post| {}> {
+    return this.postsService.findOneById(id);
   }
 
   @ResolveProperty()
   comments(@Parent() post): Observable<Comment[] | {}> {
     const { id } = post;
-    return this.commentsService.findByPost(id).pipe(
-      // catchError((err) => {
-      //   return err;
-      // })
-    );
+    return this.commentsService.findByPost(id);
   }
 
   @Mutation('createPost')
-  create(@Args('title') title: string, @Args('body') body: string): Observable<Post | {}> {
-    return this.postsService.create({ title, body } as CreatePostDto).pipe(
+  create(@Args('createPostInput') args: CreatePostDto): Observable<Post> {
+    return this.postsService.create(args).pipe(
       tap((createdPost) => pubSub.publish('postCreated', { postCreated: createdPost }))
-    ).pipe(
-      catchError((err) => {
-        return err;
-      })
     );
   }
 

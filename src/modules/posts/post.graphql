@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-  createPost(title: String!, body: String): Post
+  createPost(createPostInput: CreatePostInput): Post
 }
 
 type Subscription {
@@ -17,4 +17,9 @@ type Post {
   body: String
   points: Int
   comments: [Comment]
+}
+
+input CreatePostInput {
+  title: String @constraint(minLength: 3)
+  body: String
 }
