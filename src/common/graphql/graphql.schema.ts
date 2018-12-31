@@ -5,7 +5,7 @@ export class CreateCommentInput {
 }
 
 export class CreatePostInput {
-    title?: ConstraintString;
+    title?: string;
     body?: string;
 }
 

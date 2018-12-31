@@ -20,6 +20,6 @@ type Post {
 }
 
 input CreatePostInput {
-  title: String @constraint(minLength: 3)
+  title: String
   body: String
 }
