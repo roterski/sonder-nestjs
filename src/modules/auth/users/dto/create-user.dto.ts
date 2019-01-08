@@ -1,7 +1,10 @@
-import { Min } from 'class-validator';
+import { MinLength, IsEmail } from 'class-validator';
 import { CreateUserInput } from '../../../../common/graphql/graphql.schema';
 
 export class CreateUserDto extends CreateUserInput {
-  @Min(1)
-  firstName: string;
+  @MinLength(1)
+  firstName?: string;
+  passwordHash?: string;
+  @IsEmail()
+  email?: string;
 }

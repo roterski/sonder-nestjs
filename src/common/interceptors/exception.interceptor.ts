@@ -4,7 +4,6 @@ import {
   ExecutionContext,
   HttpStatus,
 } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import * as _ from 'lodash';

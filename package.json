@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^5.2.2",
     "anonymize": "^1.0.0",
     "apollo-server-express": "^2.1.0",
+    "bcrypt": "^3.0.3",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "dotenv": "^6.2.0",

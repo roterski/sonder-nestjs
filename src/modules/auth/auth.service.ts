@@ -1,10 +1,11 @@
-import { Injectable, HttpService } from '@nestjs/common';
+import { Injectable, HttpService, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { UsersService, User, CreateUserDto } from './users';
-import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { Observable, of, from, throwError, noop } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -30,14 +31,40 @@ export class AuthService {
           email: data.email
         })),
         switchMap((dto: CreateUserDto) => this.usersService.getOrCreate(dto, ['facebookId'])),
-        map((user: User) => {
-          const { id, email } = user;
-          return this.jwtService.sign({ id, email });
-        })
+        map((user: User) => this.signJwt(user))
       )
+  }
+
+  signUp(email: string, password: string): Observable<string> {
+    const saltRounds = 10;
+
+    return this.usersService.findOne({ email }).pipe(
+      switchMap((user) => user ? throwError(new ConflictException('User already exists')) : of(null)),
+      switchMap(() => from(bcrypt.hash(password, saltRounds))),
+      switchMap((passwordHash: string) => this.usersService.create({ email, passwordHash })),
+      map((user: User) => this.signJwt(user))
+    )
+  }
+
+  signIn(email: string, password: string): Observable<string> {
+    let user: User;
+    const failureMessage = 'User not found or password is incorrect';
+
+    return this.usersService.findOne({ email }).pipe(
+        switchMap((foundUser: User) => foundUser ? of(foundUser) : throwError(new ConflictException(failureMessage))),
+        tap((foundUser: User) => (user = foundUser)),
+        switchMap(() => from(bcrypt.compare(password, user.passwordHash))),
+        switchMap((correct: boolean) => correct ? of(user) : throwError(new ConflictException(failureMessage))),
+        map(() => this.signJwt(user))
+      );
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {
     return await this.usersService.findOneByJwtPayload(payload);
+  }
+
+  private signJwt(user: User): string {
+    const { id, email } = user;
+    return this.jwtService.sign({ id, email });
   }
 }

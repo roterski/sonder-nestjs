@@ -23,6 +23,10 @@ export class UsersService {
     return await this.userRepository.findOne(id);
   }
 
+  findOne(query: any): Observable<User> {
+    return from(this.userRepository.findOne(query));
+  }
+
   create(createUserDto: CreateUserDto): Observable<User> {
     return of(User.create(createUserDto))
       .pipe(
