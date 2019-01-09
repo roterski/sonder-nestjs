@@ -1,11 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, OneToMany } from "typeorm";
 import { Comment } from './comment.entity';
+import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
 
 @Entity()
-export class Post extends BaseEntity {
-
-  @PrimaryGeneratedColumn()
-  id: string;
+export class Post extends SonderBaseEntity {
 
   @Column()
   title: string;

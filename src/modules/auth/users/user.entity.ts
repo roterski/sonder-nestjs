@@ -1,11 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, Index } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  Column,
+  Index,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn } from "typeorm";
+import { SonderBaseEntity } from '../../../common/entities/SonderBaseEntity';
 
 @Entity()
-export class User extends BaseEntity {
-
-  @PrimaryGeneratedColumn()
-  id: string;
-
+export class User extends SonderBaseEntity {
   @Column({ nullable: true })
   @Index({ unique: true })
   email: string;
