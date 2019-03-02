@@ -13,29 +13,27 @@ export class PostsController {
   @Get()
   index(@Req() request): Observable<any> {
     return this.postService.findAll().pipe(
-      map((posts) => (
-        {
-          data: posts,
-          page: 1,
-          perPage: posts.length,
-          totalEntries: posts.length,
-          totalPages: 1
-        }
-      ))
+      map(posts => ({
+        data: posts,
+        page: 1,
+        perPage: posts.length,
+        totalEntries: posts.length,
+        totalPages: 1,
+      })),
     );
   }
 
   @Get(':id')
   show(@Param() params): Observable<any> {
-    return this.postService.findOneById(params.id).pipe(
-      map(post => ({ data: post })),
-    );
+    return this.postService
+      .findOneById(params.id)
+      .pipe(map(post => ({ data: post })));
   }
 
   @Post()
-  create(@Body('post') postParam): Observable<any> {
-    return this.postService.create(postParam).pipe(
-      map(post => ({ data: post })),
-    );
+  create(@Body('post') postParam: CreatePostDto): Observable<any> {
+    return this.postService
+      .create(postParam)
+      .pipe(map(post => ({ data: post })));
   }
 }
