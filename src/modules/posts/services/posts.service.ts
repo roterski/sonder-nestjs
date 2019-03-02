@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Post } from './post.entity';
-import { CreatePostDto } from './dto/create-post.dto';
+import { Post } from '../entities';
+import { CreatePostDto } from '../dto';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap, catchError } from 'rxjs/operators';
 

@@ -1,8 +1,8 @@
 import { Controller, Body, Get, Post, UseGuards, Req, Param, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateCommentDto } from '../dto';
 import { Observable } from 'rxjs';
-import { CommentsService } from './comments.service';
+import { CommentsService } from '../services';
 import { map, tap } from 'rxjs/operators';
 
 @Controller()

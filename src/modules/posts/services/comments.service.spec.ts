@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentsService } from './comments.service';
-import { Comment } from './comment.entity';
+import { Comment } from '../entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('CommentsService', () => {
