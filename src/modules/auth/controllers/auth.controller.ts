@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 

@@ -1,11 +1,10 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from './users/users.service';
-import { User } from './users/user.entity';
+import { User } from './entities';
+import { UsersService, AuthService  } from './services';
 import { JwtStrategy } from './jwt-strategy';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { AuthController } from './controllers';
 import { PassportModule } from '@nestjs/passport';
 import * as env from 'env-var';
 
