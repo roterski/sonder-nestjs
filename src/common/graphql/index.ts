@@ -4,7 +4,7 @@ import { GqlModuleOptions } from '@nestjs/graphql';
 import * as env from 'env-var';
 
 export const graphqlConfig: GqlModuleOptions = {
-  typePaths: ['./**/*.graphql'],
+  typePaths: ['./**/**/*.graphql'],
   definitions: {
     path: join(process.cwd(), 'src/common/graphql/graphql.schema.ts'),
     outputAs: 'class',
