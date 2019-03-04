@@ -1,10 +1,12 @@
 import { Injectable, HttpService, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { UsersService, User, CreateUserDto } from './users';
+import { User } from '../entities';
+import { UsersService } from './users.service';
+import { CreateUserDto } from '../users';
 import { Observable, of, from, throwError, noop } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Controller, Body, Get, Post, UseGuards, Req, Param, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
+import { PostsService } from '../services';
+import { CreatePostDto } from '../dto';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 

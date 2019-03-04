@@ -3,10 +3,10 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { User } from './user.entity';
+import { User } from '../users/user.entity';
 import { GqlAuthGuard } from '../graphql-auth.guard';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UsersService } from '../users/users.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 const pubSub = new PubSub();
 

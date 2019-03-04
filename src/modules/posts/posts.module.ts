@@ -1,14 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PostsController } from './posts.controller';
-import { CommentsController } from './comments.controller';
+import { PostsController, CommentsController } from './controllers';
 import { PassportModule } from '@nestjs/passport';
-import { PostsService } from './posts.service';
-import { CommentsService } from './comments.service';
+import { PostsService, CommentsService } from './services';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post } from './post.entity';
-import { Comment } from './comment.entity';
-import { PostsResolvers } from './post.resolvers';
-import { CommentsResolvers } from './comment.resolvers';
+import { Post, Comment } from './entities';
+import { PostsResolvers, CommentsResolvers } from './graphql';
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../entities';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';

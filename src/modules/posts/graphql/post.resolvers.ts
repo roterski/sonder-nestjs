@@ -3,13 +3,11 @@ import { Args, Mutation, Query, Resolver, Subscription, ResolveProperty, Parent 
 import { PubSub } from 'graphql-subscriptions';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { Post } from './post.entity';
-import { Comment } from './comment.entity';
-import { GqlAuthGuard } from '../auth/graphql-auth.guard';
-import { PostsService } from './posts.service';
-import { CommentsService } from './comments.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { ExceptionInterceptor } from '../../common/interceptors/'
+import { Post, Comment } from '../entities';
+import { GqlAuthGuard } from '../../auth/graphql-auth.guard';
+import { PostsService, CommentsService } from '../services';
+import { CreatePostDto } from '../dto';
+import { ExceptionInterceptor } from '../../../common/interceptors/'
 
 const pubSub = new PubSub();
 

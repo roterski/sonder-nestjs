@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Comment } from './comment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { Comment } from '../entities';
+import { CreateCommentDto } from '../dto';
+import { JwtPayload } from '../../auth/interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
