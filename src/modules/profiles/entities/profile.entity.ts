@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../../auth'
+import { User } from '../../auth/entities/user.entity';
 import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
 
 @Entity()
