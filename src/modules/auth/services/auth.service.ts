@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { User } from '../entities';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '../users';
+import { CreateUserDto } from '../dto';
 import { Observable, of, from, throwError, noop } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
