@@ -3,7 +3,7 @@ dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { LoggingInterceptor, ExceptionInterceptor } from './common/interceptors';
+import { LoggingInterceptor, ExceptionInterceptor } from './modules/common/interceptors';
 import 'reflect-metadata';
 
 async function bootstrap() {

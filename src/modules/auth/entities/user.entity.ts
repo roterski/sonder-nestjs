@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   VersionColumn } from "typeorm";
-import { SonderBaseEntity } from '../../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
 
 @Entity()
 export class User extends SonderBaseEntity {

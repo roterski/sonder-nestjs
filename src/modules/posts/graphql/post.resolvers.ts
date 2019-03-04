@@ -7,7 +7,7 @@ import { Post, Comment } from '../entities';
 import { GqlAuthGuard } from '../../auth/graphql-auth.guard';
 import { PostsService, CommentsService } from '../services';
 import { CreatePostDto } from '../dto';
-import { ExceptionInterceptor } from '../../../common/interceptors/'
+import { ExceptionInterceptor } from '../../common/interceptors/'
 
 const pubSub = new PubSub();
 
