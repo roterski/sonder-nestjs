@@ -5,11 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostsModule } from './modules/posts/posts.module';
-import { graphqlConfig } from './modules/common/graphql';
-
 @Module({
   imports: [
-    GraphQLModule.forRoot(graphqlConfig),
     TypeOrmModule.forRoot(),
     AuthModule,
     PostsModule
