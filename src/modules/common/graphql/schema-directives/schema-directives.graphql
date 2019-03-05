@@ -1,2 +1,0 @@
-directive @constraint(minLength: Int) on INPUT_FIELD_DEFINITION
-scalar ConstraintString

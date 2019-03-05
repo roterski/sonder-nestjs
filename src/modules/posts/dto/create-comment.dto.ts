@@ -1,7 +1,10 @@
 import { MinLength } from 'class-validator';
-import { CreateCommentInput } from '../../common/graphql/graphql.schema';
 
-export class CreateCommentDto extends CreateCommentInput{
+export class CreateCommentDto {
   @MinLength(3)
   body: string;
+
+  parentIds?: number[];
+
+  postId?: number;
 }
