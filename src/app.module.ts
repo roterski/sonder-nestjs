@@ -11,7 +11,8 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
   imports: [
     TypeOrmModule.forRoot(),
     AuthModule,
-    PostsModule
+    PostsModule,
+    ProfilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
