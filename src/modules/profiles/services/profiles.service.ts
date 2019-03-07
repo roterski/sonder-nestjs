@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Profile } from '../entities';
+import { CreateProfileDto } from '../dto'
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -13,10 +14,7 @@ export class ProfilesService {
     private readonly profileRepository: Repository<Profile>,
   ) {}
 
-    createDefault(name?: string) {
-      return of(Profile.create({ name, default: true }))
-        .pipe(
-          switchMap((profile: Profile) => profile.save())
-        );
-    }
+  create(createProfileDto: CreateProfileDto): Profile {
+    return Profile.create(createProfileDto);
+  }
 }

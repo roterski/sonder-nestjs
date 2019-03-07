@@ -13,7 +13,7 @@ import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
 @Entity()
 @Index(['userId', 'default'], { unique: true })
 export class Profile extends SonderBaseEntity {
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column({ default: false })
