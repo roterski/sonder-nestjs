@@ -16,6 +16,6 @@ export class Comment extends SonderBaseEntity {
   @ManyToOne(type => Post, post => post.comments)
   @JoinColumn({ name: 'postId' })
   post: Post;
-  @Column('int', { nullable: true })
+  @Column('int')
   postId: number;
 }
