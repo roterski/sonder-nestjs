@@ -1,14 +1,16 @@
 import { Controller, Body, Get, Post, UseGuards, Req, Param, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from '../services';
+import { ProfilesService } from '../../profiles';
+import { CurrentUser } from '../../auth';
 import { CreatePostDto } from '../dto';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap, switchMap } from 'rxjs/operators';
 
 @Controller('posts')
 @UseGuards(AuthGuard())
 export class PostsController {
-  constructor(private readonly postService: PostsService) {}
+  constructor(private readonly postService: PostsService, private readonly profilesService: ProfilesService) {}
 
   @Get()
   index(@Req() request): Observable<any> {
@@ -31,9 +33,12 @@ export class PostsController {
   }
 
   @Post()
-  create(@Body('post') postParam: CreatePostDto): Observable<any> {
-    return this.postService
-      .create(postParam)
-      .pipe(map(post => ({ data: post })));
+  create(@Body('post') postParam: CreatePostDto, @CurrentUser() currentUser): Observable<any> {
+    return this.profilesService
+      .getProfile(currentUser.id, postParam.profileId)
+      .pipe(
+        switchMap((profile) => this.postService.create({...postParam, profileId: profile.id })),
+        map(post => ({ data: post })),
+      );
   }
 }

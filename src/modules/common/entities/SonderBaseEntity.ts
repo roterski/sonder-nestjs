@@ -11,7 +11,7 @@ import {
 
 export abstract class SonderBaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn()
   createdAt: Date;
