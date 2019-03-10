@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Profile } from '../entities';
 import { CreateProfileDto } from '../dto'
 import { Observable, from, of } from 'rxjs';
@@ -16,6 +16,10 @@ export class ProfilesService {
 
   create(createProfileDto: CreateProfileDto): Profile {
     return Profile.create(createProfileDto);
+  }
+
+  findByIds(ids: number[]): Observable<Profile[]> {
+    return from(this.profileRepository.find({ where: { id: In(ids) } }));
   }
 
   getProfile(userId: number, id?: number): Observable<Profile> {
