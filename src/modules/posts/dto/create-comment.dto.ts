@@ -7,4 +7,6 @@ export class CreateCommentDto {
   parentIds?: number[];
 
   postId?: number;
+
+  profileId?: number;
 }

@@ -6,7 +6,9 @@ import {
   Index,
   CreateDateColumn,
   UpdateDateColumn,
-  VersionColumn } from "typeorm";
+  OneToMany,
+  VersionColumn } from 'typeorm';
+import { Profile } from '../../profiles';
 import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
 
 @Entity()
@@ -24,4 +26,7 @@ export class User extends SonderBaseEntity {
   @Column({ nullable: true })
   @Index({ unique: true })
   facebookId: string;
+
+  @OneToMany(type => Profile, profile => profile.user)
+  profiles: Profile[];
 }

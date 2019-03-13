@@ -1,8 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getManager } from 'typeorm';
 import { User } from '../entities';
 import { CreateUserDto } from '../dto';
+import { ProfilesService } from '../../profiles';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
@@ -13,6 +14,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly profilesService: ProfilesService
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -28,10 +30,16 @@ export class UsersService {
   }
 
   create(createUserDto: CreateUserDto): Observable<User> {
-    return of(User.create(createUserDto))
-      .pipe(
-        switchMap((user) => user.save())
-      );
+    return from(getManager().transaction(async (transactionalEntityManager) => {
+      const user = await transactionalEntityManager.save(User.create(createUserDto));
+      const profileAttrs = {
+        name: user.firstName,
+        userId: user.id,
+        default: true
+      };
+      await transactionalEntityManager.save(this.profilesService.create(profileAttrs));
+      return user;
+    }));
   }
 
   getOrCreate(createUserDto: CreateUserDto, findBy: string[]): Observable<User> {

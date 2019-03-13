@@ -6,11 +6,12 @@ import { UsersService, AuthService  } from './services';
 import { JwtStrategy } from './jwt-strategy';
 import { AuthController } from './controllers';
 import { PassportModule } from '@nestjs/passport';
+import { ProfilesService, Profile } from '../profiles';
 import * as env from 'env-var';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Profile]),
     PassportModule.register({ defaultStrategy: 'jwt'}),
     JwtModule.register({
       secretOrPrivateKey: env.get('APP_SECRET').required().asString(),
@@ -20,7 +21,12 @@ import * as env from 'env-var';
     }),
     HttpModule
   ],
-  providers: [UsersService, AuthService, JwtStrategy],
+  providers: [
+    UsersService,
+    AuthService,
+    JwtStrategy,
+    ProfilesService
+  ],
   controllers: [AuthController]
 })
 export class AuthModule {}
