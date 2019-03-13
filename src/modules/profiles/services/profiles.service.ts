@@ -18,8 +18,9 @@ export class ProfilesService {
     return Profile.create(createProfileDto);
   }
 
-  findByIds(ids: number[]): Observable<Profile[]> {
-    return from(this.profileRepository.find({ where: { id: In(ids) } }));
+  findByIds(ids: number | number[]): Observable<Profile[]> {
+    const id = Array.isArray(ids) ? In(ids) : ids;
+    return from(this.profileRepository.find({ where: { id } }));
   }
 
   getProfile(userId: number, id?: number): Observable<Profile> {
