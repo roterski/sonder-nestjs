@@ -29,8 +29,12 @@ const prodConfig = {
   url: env.get('DATABASE_URL').asString(),
   synchronize: isProduction ? false : true,
   logging: isProduction ? false : true,
-  entities: ['dist/src/**/**.entity{.ts,.js}'],
-  migrations: ['dist/src/migration/*.js'],
+  entities: [
+    'dist/src/**/**.entity.js',
+  ],
+  migrations: [
+    'dist/src/migration/*.js',
+  ],
   subscribers: ['dist/src/subscriber/**/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src/entity',
