@@ -11,9 +11,9 @@ module.exports = {
   url: env.get('DATABASE_URL').asString(),
   synchronize: isProduction ? false : true,
   logging: isProduction ? false : true,
-  entities: ['src/**/**.entity{.ts,.js}'],
-  migrations: ['src/migration/**/*.ts'],
-  subscribers: ['src/subscriber/**/*.ts'],
+  entities: ['dist/src/**/**.entity{.ts,.js}'],
+  migrations: ['dist/src/migration/**/*.ts'],
+  subscribers: ['dist/src/subscriber/**/*.ts'],
   cli: {
     entitiesDir: 'src/entity',
     migrationsDir: 'src/migration',
