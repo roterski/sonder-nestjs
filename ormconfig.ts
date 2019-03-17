@@ -30,8 +30,8 @@ const prodConfig = {
   synchronize: isProduction ? false : true,
   logging: isProduction ? false : true,
   entities: ['dist/src/**/**.entity{.ts,.js}'],
-  migrations: ['dist/src/migration/**/*.ts'],
-  subscribers: ['dist/src/subscriber/**/*.ts'],
+  migrations: ['dist/src/migration/*.js'],
+  subscribers: ['dist/src/subscriber/**/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src/entity',
     migrationsDir: 'src/migration',
