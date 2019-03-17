@@ -5,11 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
-import * as env from 'env-var';
+import * as ormConfig from '../ormconfig';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(ormConfig),
     AuthModule,
     PostsModule,
     ProfilesModule,
