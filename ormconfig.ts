@@ -6,7 +6,7 @@ const isProduction =
     .required()
     .asString() === 'production';
 
-module.exports = {
+const devConfig = {
   type: 'postgres',
   port: env.get('DB_PORT', '5432').asIntPositive(),
   username: env.get('DB_USERNAME').asString(),
@@ -23,3 +23,20 @@ module.exports = {
     subscribersDir: 'src/subscriber',
   },
 };
+
+const prodConfig = {
+  type: 'postgres',
+  url: env.get('DATABASE_URL').asString(),
+  synchronize: isProduction ? false : true,
+  logging: isProduction ? false : true,
+  entities: ['dist/src/**/**.entity{.ts,.js}'],
+  migrations: ['dist/src/migration/**/*.ts'],
+  subscribers: ['dist/src/subscriber/**/*.ts'],
+  cli: {
+    entitiesDir: 'src/entity',
+    migrationsDir: 'src/migration',
+    subscribersDir: 'src/subscriber',
+  },
+};
+
+module.exports = isProduction ? prodConfig : devConfig;
