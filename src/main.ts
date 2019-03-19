@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+import * as env from 'env-var';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
@@ -13,6 +14,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new ExceptionInterceptor());
   app.enableCors();
-  await app.listen(4000);
+  await app.listen(env.get('PORT', '4000').asIntPositive());
 }
 bootstrap();

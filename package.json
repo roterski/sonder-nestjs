@@ -4,15 +4,19 @@
   "description": "description",
   "author": "Piotr Roterski",
   "license": "MIT",
+  "engines": {
+    "node": "9.4.0"
+  },
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "prestart:prod": "rimraf dist && tsc",
-    "start:prod": "node dist/main.js",
+    "start:prod": "node dist/src/main.js",
     "start:hmr": "node dist/server",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "clean": "npx rimraf -- node_modules package-lock.json && npm i",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -26,7 +30,6 @@
   "dependencies": {
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
-    "@nestjs/graphql": "git@github.com:Simskii/graphql.git#Schemadist",
     "@nestjs/jwt": "^0.2.0",
     "@nestjs/passport": "^5.1.0",
     "@nestjs/typeorm": "^5.2.2",

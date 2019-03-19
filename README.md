@@ -1,5 +1,5 @@
 ## PREPARE before production
-
+whitelist cors origin
 ## Installation
 
 ```bash
