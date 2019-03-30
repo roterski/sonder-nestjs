@@ -6,5 +6,5 @@ export class CreatePostDto {
 
   body?: string;
 
-  profileId?: number;
+  profileId: number;
 }
