@@ -14,7 +14,7 @@ export class ProfilesService {
     private readonly profileRepository: Repository<Profile>,
   ) {}
 
-  create(createProfileDto: CreateProfileDto): Profile {
+  build(createProfileDto: CreateProfileDto): Profile {
     return Profile.create(createProfileDto);
   }
 
