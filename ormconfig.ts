@@ -1,19 +1,19 @@
 import * as env from 'env-var';
 
-const isProduction =
+const environment =
   env
     .get('NODE_ENV')
     .required()
-    .asString() === 'production';
+    .asString();
 
-const devConfig = {
+const development = {
   type: 'postgres',
   port: env.get('DB_PORT', '5432').asIntPositive(),
   username: env.get('DB_USERNAME').asString(),
   password: env.get('DB_PASSWORD').asString(),
-  database: env.get('DB_NAME', 'sonder_api_nest_dev').asString(),
-  synchronize: isProduction ? false : true,
-  logging: isProduction ? false : true,
+  database: `${env.get('DB_NAME', 'sonder_api_nest').asString()}_dev`,
+  synchronize: true,
+  logging: true,
   entities: ['src/**/**.entity{.ts,.js}'],
   migrations: ['src/migration/**/*.ts'],
   subscribers: ['src/subscriber/**/*.ts'],
@@ -24,17 +24,20 @@ const devConfig = {
   },
 };
 
-const prodConfig = {
+const test = {
+  ...development,
+  // synchronize: true,
+  // dropSchema: true,
+  database: `${env.get('DB_NAME', 'sonder_api_nest').asString()}_test`,
+};
+
+const production = {
   type: 'postgres',
   url: env.get('DATABASE_URL').asString(),
-  synchronize: isProduction ? false : true,
-  logging: isProduction ? false : true,
-  entities: [
-    'dist/src/**/**.entity.js',
-  ],
-  migrations: [
-    'dist/src/migration/*.js',
-  ],
+  synchronize: false,
+  logging: false,
+  entities: ['dist/src/**/**.entity.js'],
+  migrations: ['dist/src/migration/*.js'],
   subscribers: ['dist/src/subscriber/**/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src/entity',
@@ -43,4 +46,10 @@ const prodConfig = {
   },
 };
 
-module.exports = isProduction ? prodConfig : devConfig;
+const config = {
+  development,
+  test,
+  production,
+}
+
+module.exports = config[environment];
