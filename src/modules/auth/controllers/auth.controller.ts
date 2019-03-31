@@ -1,8 +1,8 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthService } from '../services';
-import { SignUpDto } from '../dto';
+import { SignUpDto, SignInDto } from '../dto';
 
 @Controller()
 export class AuthController {
@@ -23,9 +23,10 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  signIn(@Body() body): Observable<any> {
+  @HttpCode(200)
+  signIn(@Body() signInDto: SignInDto): Observable<any> {
     return this.authService
-      .signIn(body.email, body.password)
+      .signIn(signInDto)
       .pipe(map((token: string) => ({ auth_token: token })));
   }
 }
