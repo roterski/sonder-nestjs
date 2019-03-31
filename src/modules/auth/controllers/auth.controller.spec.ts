@@ -1,7 +1,9 @@
 import { User } from '../entities'
+import { Profile } from '../../profiles';
 import * as request from 'supertest';
 import { prepareTestApp } from '../../../../test/utils';
-import { getConnection, getManager } from 'typeorm';
+import { UserFactory } from '../../../../test/factories';
+import { getConnection } from 'typeorm';
 
 describe('Auth Controller (e2e)', () => {
   let app;
@@ -19,10 +21,6 @@ describe('Auth Controller (e2e)', () => {
       request(app.getHttpServer())
         .post('/sign-up')
         .send(params);
-    const getCount = () =>
-      getManager()
-        .createQueryBuilder(User, 'user')
-        .getCount();
 
     describe('with valid params', () => {
       const params = { email: 'test@sonder.com', password: 'password' };
@@ -38,11 +36,18 @@ describe('Auth Controller (e2e)', () => {
       });
 
       it('creates user', async (done) => {
-        const count = await getCount();
+        const count = await User.count();
         await subject(params);
-        expect(await getCount()).toEqual(count + 1);
+        expect(await User.count()).toEqual(count + 1);
         done();
-      })
+      });
+
+      it('creates profile', async (done) => {
+        const count = await Profile.count();
+        await subject(params);
+        expect(await Profile.count()).toEqual(count +1);
+        done();
+      });
     });
 
     describe('with invalid params', () => {
@@ -115,8 +120,42 @@ describe('Auth Controller (e2e)', () => {
         .post('/sign-in')
         .send(params);
 
-    describe('with valid params', () => {
+      describe('when user exists', () => {
+        let user: User;
 
+        beforeEach(async () => {
+          user = await UserFactory.create();
+        });
+
+        describe('with correct credentials', () => {
+          const params = ({ email }) => ({ email, password: 'password' });
+
+          it('returns auth_token', (done) => (
+            subject(params(user))
+              .expect(200)
+              .expect(({ body }) => {
+                expect(Object.keys(body)).toEqual(['auth_token']);
+                expect(body.auth_token.length).toBeGreaterThan(100);
+              })
+              .end(done)
+          ));
+        });
+
+        describe('with invalid password', () => {
+          const params = ({ email }) => ({
+            email,
+            password: 'wrongpwd',
+          });
+
+          it('returns error', done =>
+            subject(params(user))
+              .expect(409, {
+                statusCode: 409,
+                error: 'Conflict',
+                message: 'User not found or password is incorrect'
+              }, done)
+          );
+        });
     });
   });
 });
