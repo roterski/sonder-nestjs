@@ -26,8 +26,9 @@ const development = {
 
 const test = {
   ...development,
-  // synchronize: true,
-  // dropSchema: true,
+  synchronize: true,
+  dropSchema: true,
+  logging: false,
   database: `${env.get('DB_NAME', 'sonder_api_nest').asString()}_test`,
 };
 

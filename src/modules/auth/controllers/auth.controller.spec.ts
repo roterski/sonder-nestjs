@@ -1,31 +1,17 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../../../app.module';
-
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from '../services';
 import { User } from '../entities'
-import { getConnection, QueryBuilder, Connection, getManager } from 'typeorm';
+import * as request from 'supertest';
+import { prepareTestApp } from '../../../../test/utils';
+import { getConnection, getManager } from 'typeorm';
 
 describe('Auth Controller (e2e)', () => {
-  let app: INestApplication;
-  let connection: Connection;
+  let app;
 
   beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await prepareTestApp();
   });
 
   beforeEach(async () => {
-    connection = getConnection();
-    await connection.synchronize(true);
+    await getConnection().synchronize(true);
   });
 
   describe('/sign-up (POST)', () => {
@@ -57,6 +43,80 @@ describe('Auth Controller (e2e)', () => {
         expect(await getCount()).toEqual(count + 1);
         done();
       })
+    });
+
+    describe('with invalid params', () => {
+      describe('pasword missing', () => {
+        const params = { email: 'test@sonder.com' };
+
+        it('returns error', done => {
+          return subject(params)
+            .expect(400, {
+              statusCode: 400,
+              error: 'Bad Request',
+              message: [{
+                property: 'password',
+                target: params,
+                constraints: {
+                  minLength: 'password must be longer than or equal to 5 characters',
+                  isNotEmpty: 'password should not be empty'
+                },
+                children: []
+              }]
+            }, done);
+        });
+      });
+
+      describe('pasword too short', () => {
+        const params = { email: 'test@sonder.com', password: 'abc' };
+
+        it('returns error', done => {
+          return subject(params)
+            .expect(400, {
+              statusCode: 400,
+              error: 'Bad Request',
+              message: [{
+                property: 'password',
+                target: params,
+                constraints: {
+                  minLength: 'password must be longer than or equal to 5 characters'
+                },
+                value: params.password,
+                children: []
+              }]
+            }, done);
+        });
+      });
+
+      describe('invalid email', () => {
+        const params = { email: 'test@', password: 'password' };
+
+        it('returns error', done => {
+          return subject(params)
+            .expect(400, {
+              statusCode: 400,
+              error: 'Bad Request',
+              message: [{
+                property: 'email',
+                target: params,
+                value: params.email,
+                constraints: { isEmail: 'email must be an email' },
+                children: []
+              }]
+            }, done);
+        });
+      });
+    })
+  });
+
+  describe('/sign-in (POST)', () => {
+    const subject = params =>
+      request(app.getHttpServer())
+        .post('/sign-in')
+        .send(params);
+
+    describe('with valid params', () => {
+
     });
   });
 });
