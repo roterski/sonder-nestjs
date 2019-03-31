@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { User } from '../entities';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '../dto';
+import { CreateUserDto, SignUpDto } from '../dto';
 import { Observable, of, from, throwError, noop } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
@@ -37,8 +37,9 @@ export class AuthService {
       )
   }
 
-  signUp(email: string, password: string): Observable<string> {
+  signUp(signUpDto: SignUpDto): Observable<string> {
     const saltRounds = 10;
+    const { email, password } = signUpDto;
 
     return this.usersService.findOne({ email }).pipe(
       switchMap((user) => user ? throwError(new ConflictException('User already exists')) : of(null)),
