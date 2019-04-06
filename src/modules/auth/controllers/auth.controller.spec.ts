@@ -1,12 +1,13 @@
-import { User } from '../entities'
-import { Profile } from '../../profiles';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { User } from '../entities'
 import { prepareTestApp } from '../../../../test/utils';
+import { Profile } from '../../profiles';
 import { UserFactory } from '../../../../test/factories';
 import { getConnection } from 'typeorm';
 
-describe('Auth Controller (e2e)', () => {
-  let app;
+describe('Auth Controller', () => {
+  let app: INestApplication;
 
   beforeAll(async () => {
     app = await prepareTestApp();
@@ -16,7 +17,7 @@ describe('Auth Controller (e2e)', () => {
     await getConnection().synchronize(true);
   });
 
-  describe('/sign-up (POST)', () => {
+  describe('POST /sign-up - signUp', () => {
     const subject = params =>
       request(app.getHttpServer())
         .post('/sign-up')
@@ -25,15 +26,15 @@ describe('Auth Controller (e2e)', () => {
     describe('with valid params', () => {
       const params = { email: 'test@sonder.com', password: 'password' };
 
-      it('returns token', (done) => {
-        return subject(params)
+      it('returns token', (done) => (
+        subject(params)
           .expect(201)
           .expect((response) => {
             expect(Object.keys(response.body)).toEqual(['auth_token']);
             expect(response.body.auth_token.length).toBeGreaterThan(100);
           })
-          .end(done);
-      });
+          .end(done)
+      ));
 
       it('creates user', async (done) => {
         const count = await User.count();
@@ -54,8 +55,8 @@ describe('Auth Controller (e2e)', () => {
       describe('pasword missing', () => {
         const params = { email: 'test@sonder.com' };
 
-        it('returns error', done => {
-          return subject(params)
+        it('returns error', done => (
+          subject(params)
             .expect(400, {
               statusCode: 400,
               error: 'Bad Request',
@@ -68,15 +69,15 @@ describe('Auth Controller (e2e)', () => {
                 },
                 children: []
               }]
-            }, done);
-        });
+            }, done)
+        ));
       });
 
       describe('pasword too short', () => {
         const params = { email: 'test@sonder.com', password: 'abc' };
 
-        it('returns error', done => {
-          return subject(params)
+        it('returns error', done => (
+          subject(params)
             .expect(400, {
               statusCode: 400,
               error: 'Bad Request',
@@ -89,15 +90,15 @@ describe('Auth Controller (e2e)', () => {
                 value: params.password,
                 children: []
               }]
-            }, done);
-        });
+            }, done)
+        ));
       });
 
       describe('invalid email', () => {
         const params = { email: 'test@', password: 'password' };
 
-        it('returns error', done => {
-          return subject(params)
+        it('returns error', done => (
+          subject(params)
             .expect(400, {
               statusCode: 400,
               error: 'Bad Request',
@@ -108,8 +109,8 @@ describe('Auth Controller (e2e)', () => {
                 constraints: { isEmail: 'email must be an email' },
                 children: []
               }]
-            }, done);
-        });
+            }, done)
+        ));
       });
     })
   });

@@ -7,7 +7,6 @@ import * as request from 'supertest';
 import {
   prepareTestApp,
   authHeader,
-  compareCounts,
 } from '../../../../test/utils';
 import {
   UserFactory,
@@ -88,7 +87,45 @@ describe('Posts Controller', () => {
     });
 
     describe('with invalid params', () => {
+      describe('blank post title', () => {
+        const params = (tag: Tag, profile: Profile) => ({
+          post: {
+            title: '',
+            profileId: profile.id,
+          },
+          tags: [{ name: 'math' }, { id: tag.id, name: tag.name }],
+        });
 
+        it('returns error', done =>
+          subject(params(existingTag, currentProfile), currentUser)
+            .expect(400)
+            .expect(({ body: { message } }) => {
+              expect(message[0].constraints).toEqual({
+                minLength:
+                  'title must be longer than or equal to 3 characters',
+              });
+            })
+            .end(done));
+      });
+
+      describe('missing post title', () => {
+        const params = (tag: Tag, profile: Profile) => ({
+          post: {
+            profileId: profile.id,
+          },
+          tags: [{ name: 'math' }, { id: tag.id, name: tag.name }],
+        });
+
+        it('returns error', done =>
+          subject(params(existingTag, currentProfile), currentUser)
+            .expect(400)
+            .expect(({ body: { message } }) => {
+              expect(message[0].constraints).toEqual({
+                minLength: "title must be longer than or equal to 3 characters"
+              })
+            })
+            .end(done));
+      })
     });
   });
 });

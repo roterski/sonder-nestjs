@@ -31,7 +31,7 @@ export class TagsService {
 
   getOrCreate(createTagDtos: CreateTagDto[]): Observable<Tag[]> {
     const partitioned$ = of(...createTagDtos).pipe(
-      partition(({id}, _index) => !id)
+      partition(({id}, _index) => !!id)
     );
 
     const withIds$ = partitioned$[0].pipe(
