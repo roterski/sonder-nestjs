@@ -9,7 +9,7 @@ import {
   OneToMany,
   VersionColumn } from 'typeorm';
 import { Profile } from '../../profiles';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class User extends SonderBaseEntity {

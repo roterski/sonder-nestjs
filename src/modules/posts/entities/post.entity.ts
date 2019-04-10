@@ -12,7 +12,7 @@ import {
 import { Comment } from './comment.entity';
 import { Tag } from './tag.entity';
 import { Profile } from '../../profiles';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class Post extends SonderBaseEntity {

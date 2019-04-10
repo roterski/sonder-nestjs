@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { Post } from './post.entity';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class Tag extends SonderBaseEntity {
