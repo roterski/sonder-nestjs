@@ -11,8 +11,10 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { CurrentUser } from '../../auth';
 import { Profile } from '../entities';
 import { ProfilesService } from '../services';
+import { serialize } from '../../common'
 import * as _ from 'lodash';
 
 @Controller('profiles')
@@ -25,7 +27,16 @@ export class ProfilesController {
     return this.profilesService
       .findByIds(ids)
       .pipe(
-        map((profiles: Profile[]) => ({ data: profiles.map((profile: Profile) => _.pick(profile, ['id', 'name'])) }))
+        serialize(['id', 'name'])
+      );
+  }
+
+  @Get('my')
+  my(@CurrentUser() currentUser): Observable<any> {
+    return this.profilesService
+      .findByUserId(currentUser.id)
+      .pipe(
+        serialize(['id', 'name'])
       );
   }
 }

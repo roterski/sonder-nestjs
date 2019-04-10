@@ -23,6 +23,10 @@ export class ProfilesService {
     return from(this.profileRepository.find({ where: { id } }));
   }
 
+  findByUserId(userId: number): Observable<Profile[]> {
+    return from(this.profileRepository.find({ where: { userId }}));
+  }
+
   getProfile(userId: number, id?: number): Observable<Profile> {
     return id === undefined ? this.getDefault(userId) : this.findOne({ id });
   }
