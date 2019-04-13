@@ -1,10 +1,10 @@
-import { Controller, Body, Get, Post, UseGuards, Req, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Body, Get, Post, UseGuards, Req, Param, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from '../services';
 import { ProfilesService } from '../../profiles';
 import { CurrentUser } from '../../auth';
 import { CreatePostDto, CreateTagDto } from '../dto';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
 
 @Controller('posts')
@@ -44,6 +44,10 @@ export class PostsController {
     return this.profilesService
       .getProfile(currentUser.id, postParam.profileId)
       .pipe(
+        switchMap((profile) => profile ?
+          of(profile) :
+          throwError(new UnauthorizedException('profileId does not belong to the user'))
+        ),
         switchMap(profile =>
           this.postService.createWithTags(
             { ...postParam, profileId: profile.id },

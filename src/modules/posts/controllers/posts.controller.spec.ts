@@ -13,7 +13,7 @@ import {
   createUserWithDefaultProfile,
   TagFactory,
 } from '../../../../test/factories';
-import { Tag } from '../entities';
+import { Tag, Post } from '../entities';
 import { User } from '../../auth';
 import { Profile } from '../../profiles';
 import { PostsController } from './posts.controller';
@@ -42,7 +42,7 @@ describe('Posts Controller', () => {
         .send(params);
     
     beforeEach(async () => {
-      const { user, profile } = await createUserWithDefaultProfile()
+      const { user, profile } = await createUserWithDefaultProfile();
       currentUser = user;
       currentProfile = profile;
       existingTag = await TagFactory.create();
@@ -67,7 +67,7 @@ describe('Posts Controller', () => {
       it('creates post with tags', (done) => (
         subject(params(existingTag, currentProfile), currentUser)
           .expect(201)
-          .expect(async ({ body: { data } }) => {
+          .expect(({ body: { data } }) => {
             expect(data.title).toEqual(title);
             expect(data.body).toEqual(body);
             expect(data.profileId).toEqual(currentProfile.id);
@@ -77,17 +77,58 @@ describe('Posts Controller', () => {
           .end(done)
       ));
 
-      it('creates new tag', async (done) => {
-        const count = await Tag.count();
+      it('creates new post and a tag', async (done) => {
+        const tagCount = await Tag.count();
+        const postCount = await Post.count();
         await subject(params(existingTag, currentProfile), currentUser);
-        const countAfter = await Tag.count();
-        expect(countAfter).toEqual(count + 1);
+        expect((await Post.count())).toEqual(postCount + 1);
+        expect((await Tag.count())).toEqual(tagCount + 1);
         await done();
       })
     });
 
+    describe('with wrong profileId', () => {
+      let wrongProfile: Profile;
+      const title = lorem.sentence();
+      const body = lorem.sentences();
+      const params = (tag: Tag, profile: Profile) => ({
+        post: {
+          title,
+          body,
+          profileId: profile.id
+        },
+        tags: [
+          { name: 'math' },
+          { id: tag.id, name: tag.name }
+        ]
+      });
+
+      beforeEach(async () => {
+        const { user, profile } = await createUserWithDefaultProfile();
+        wrongProfile = profile;
+      });
+
+      it('returns 401 unauthorized', (done) => (
+        subject(params(existingTag, wrongProfile), currentUser)
+          .expect(401, {
+            statusCode: 401,
+            error: 'Unauthorized',
+            message: 'profileId does not belong to the user'
+          }, done)
+      ));
+
+      it('does not create post nor tag', async (done) => {
+        const tagCount = await Tag.count();
+        const postCount = await Post.count();
+        await subject(params(existingTag, wrongProfile), currentUser)
+        expect((await Post.count())).toEqual(postCount);
+        expect((await Tag.count())).toEqual(tagCount);
+        done();
+      })
+    });
+
     describe('with invalid params', () => {
-      describe('blank post title', () => {
+      describe('with blank post title', () => {
         const params = (tag: Tag, profile: Profile) => ({
           post: {
             title: '',
@@ -108,7 +149,7 @@ describe('Posts Controller', () => {
             .end(done));
       });
 
-      describe('missing post title', () => {
+      describe('with missing post title', () => {
         const params = (tag: Tag, profile: Profile) => ({
           post: {
             profileId: profile.id,

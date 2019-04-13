@@ -28,7 +28,7 @@ export class ProfilesService {
   }
 
   getProfile(userId: number, id?: number): Observable<Profile> {
-    return id === undefined ? this.getDefault(userId) : this.findOne({ id });
+    return id === undefined ? this.getDefault(userId) : this.findOne({ id, userId });
   }
 
   findOne(query): Observable<Profile> {
