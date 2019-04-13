@@ -9,14 +9,15 @@ import {
   authHeader,
 } from '../../../../test/utils';
 import {
-  UserFactory,
   createUserWithDefaultProfile,
   TagFactory,
+  PostFactory
 } from '../../../../test/factories';
 import { Tag, Post } from '../entities';
 import { User } from '../../auth';
 import { Profile } from '../../profiles';
 import { PostsController } from './posts.controller';
+import * as _ from 'lodash';
 
 describe('Posts Controller', () => {
   let app: INestApplication;
@@ -40,7 +41,7 @@ describe('Posts Controller', () => {
         .post('/posts')
         .set('Authorization', authHeader(user))
         .send(params);
-    
+
     beforeEach(async () => {
       const { user, profile } = await createUserWithDefaultProfile();
       currentUser = user;
@@ -71,7 +72,6 @@ describe('Posts Controller', () => {
             expect(data.title).toEqual(title);
             expect(data.body).toEqual(body);
             expect(data.profileId).toEqual(currentProfile.id);
-            expect(data.points).toEqual(0);
             expect(data.tags).toHaveLength(2);
           })
           .end(done)
@@ -167,6 +167,40 @@ describe('Posts Controller', () => {
             })
             .end(done));
       })
+    });
+  });
+
+  describe('GET /posts - index', () => {
+    let currentUser, currentProfile;
+
+    const subject = (user: User) =>
+      request(app.getHttpServer())
+        .get('/posts')
+        .set('Authorization', authHeader(user))
+
+    beforeEach(async () => {
+      const { user, profile } = await createUserWithDefaultProfile();
+      currentUser = user;
+      currentProfile = profile;
+    });
+
+    describe('without params', () => {
+      describe('when few posts exist', () => {
+        beforeEach(async () => {
+          await PostFactory.createList(5);
+        });
+
+        it('returns all of them', (done) => (
+          subject(currentUser)
+            .expect(200)
+            .expect(({ body }) => {
+              expect(body.data).toHaveLength(5);
+              expect(_.uniqBy(body.data.map(Object.keys), _.isEqual))
+                .toEqual([['id', 'title', 'body', 'profileId', 'createdAt', 'updatedAt']])
+            })
+            .end(done)
+        ));
+      });
     });
   });
 });

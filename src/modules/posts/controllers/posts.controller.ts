@@ -1,15 +1,18 @@
 import { Controller, Body, Get, Post, UseGuards, Req, Param, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PostsService } from '../services';
+import { Observable, of, throwError } from 'rxjs';
+import { map, tap, switchMap, catchError } from 'rxjs/operators';
 import { ProfilesService } from '../../profiles';
 import { CurrentUser } from '../../auth';
+import { serialize, serializeOne } from '../../common'
+import { PostsService } from '../services';
 import { CreatePostDto, CreateTagDto } from '../dto';
-import { Observable, of, throwError } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
 
 @Controller('posts')
 @UseGuards(AuthGuard())
 export class PostsController {
+  private postAttrs = ['id', 'title', 'body', 'tags', 'profileId', 'createdAt', 'updatedAt'];
+
   constructor(
     private readonly postService: PostsService,
     private readonly profilesService: ProfilesService,
@@ -18,11 +21,15 @@ export class PostsController {
   @Get()
   index(@Req() request): Observable<any> {
     return this.postService.findAll().pipe(
-      map(posts => ({
-        data: posts,
+      tap((posts) => {
+
+      }),
+      serialize(this.postAttrs),
+      map(({ data }) => ({
+        data,
         page: 1,
-        perPage: posts.length,
-        totalEntries: posts.length,
+        perPage: data.length,
+        totalEntries: data.length,
         totalPages: 1,
       })),
     );
@@ -32,7 +39,9 @@ export class PostsController {
   show(@Param() params): Observable<any> {
     return this.postService
       .findOneById(params.id)
-      .pipe(map(post => ({ data: post })));
+      .pipe(
+        serialize(this.postAttrs)
+      );
   }
 
   @Post()
@@ -54,7 +63,7 @@ export class PostsController {
             tagsParam,
           ),
         ),
-        map(post => ({ data: post })),
+        serialize(this.postAttrs)
       );
   }
 }

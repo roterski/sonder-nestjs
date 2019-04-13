@@ -20,6 +20,8 @@ import * as _ from 'lodash';
 @Controller('profiles')
 @UseGuards(AuthGuard())
 export class ProfilesController {
+  private profileAttrs = ['id', 'name'];
+
   constructor(private profilesService: ProfilesService) {}
 
   @Get()
@@ -27,7 +29,7 @@ export class ProfilesController {
     return this.profilesService
       .findByIds(ids)
       .pipe(
-        serialize(['id', 'name'])
+        serialize(this.profileAttrs)
       );
   }
 
@@ -36,7 +38,7 @@ export class ProfilesController {
     return this.profilesService
       .findByUserId(currentUser.id)
       .pipe(
-        serialize(['id', 'name'])
+        serialize(this.profileAttrs)
       );
   }
 }
