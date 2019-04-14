@@ -16,7 +16,9 @@ export class PostsService {
   ) { }
 
   findAll(): Observable<Post[]> {
-    return from(this.postRepository.find());
+    return from(this.postRepository.find({
+      relations: ['tags']
+    }));
   }
 
   findOneById(id: number): Observable<Post> {

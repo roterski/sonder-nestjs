@@ -21,9 +21,6 @@ export class PostsController {
   @Get()
   index(@Req() request): Observable<any> {
     return this.postService.findAll().pipe(
-      tap((posts) => {
-
-      }),
       serialize(this.postAttrs),
       map(({ data }) => ({
         data,

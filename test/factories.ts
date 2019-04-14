@@ -25,10 +25,13 @@ export const createUserWithDefaultProfile = async () => {
   return { user, profile };
 }
 
+export const TagFactory = new Factory(Tag)
+  .sequence('name', () => lorem.word());
+
 export const PostFactory = new Factory(Post)
   .attr('title', lorem.sentence())
   .attr('body', lorem.sentences(5))
   .assocOne('profile', DefaultProfileFactory);
 
-export const TagFactory = new Factory(Tag)
-  .attr('name', lorem.word());
+export const PostWithTagsFactory = (tagCount = 2 ) => PostFactory
+  .assocMany('tags', TagFactory, tagCount);

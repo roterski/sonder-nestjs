@@ -11,7 +11,7 @@ import {
 import {
   createUserWithDefaultProfile,
   TagFactory,
-  PostFactory
+  PostWithTagsFactory
 } from '../../../../test/factories';
 import { Tag, Post } from '../entities';
 import { User } from '../../auth';
@@ -186,17 +186,18 @@ describe('Posts Controller', () => {
 
     describe('without params', () => {
       describe('when few posts exist', () => {
-        beforeEach(async () => {
-          await PostFactory.createList(5);
+        beforeEach(async (done) => {
+          await PostWithTagsFactory(2).createList(5);
+          done();
         });
 
-        it('returns all of them', (done) => (
+        it('returns all of them with tags', (done) => (
           subject(currentUser)
             .expect(200)
             .expect(({ body }) => {
               expect(body.data).toHaveLength(5);
               expect(_.uniqBy(body.data.map(Object.keys), _.isEqual))
-                .toEqual([['id', 'title', 'body', 'profileId', 'createdAt', 'updatedAt']])
+                .toEqual([['id', 'title', 'body', 'tags', 'profileId', 'createdAt', 'updatedAt']])
             })
             .end(done)
         ));
