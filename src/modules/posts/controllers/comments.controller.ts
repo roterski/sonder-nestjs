@@ -12,6 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
+import { serialize } from '../../common';
 import { CreateCommentDto } from '../dto';
 import { CommentsService } from '../services';
 import { ProfilesService } from '../../profiles';
@@ -20,6 +21,16 @@ import { CurrentUser } from '../../auth';
 @Controller()
 @UseGuards(AuthGuard())
 export class CommentsController {
+  private commentAttrs = [
+    'id',
+    'body',
+    'parentIds',
+    'postId',
+    'profileId',
+    'createdAt',
+    'updatedAt',
+  ];
+
   constructor(
     private readonly commentsService: CommentsService,
     private readonly profilesService: ProfilesService,
@@ -29,7 +40,7 @@ export class CommentsController {
   index(@Param() params): Observable<any> {
     return this.commentsService
       .findByPost(params.postId)
-      .pipe(map(comments => ({ data: comments })));
+      .pipe(serialize(this.commentAttrs));
   }
 
   @Post('posts/:postId/comments')
@@ -45,10 +56,10 @@ export class CommentsController {
           this.commentsService.create({
             ...commentParam,
             postId,
-            profileId: profile.id
+            profileId: profile.id,
           }),
         ),
-        map(comment => ({ data: comment }))
+        serialize(this.commentAttrs),
       );
   }
 }

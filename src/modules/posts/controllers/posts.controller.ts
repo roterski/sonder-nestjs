@@ -11,7 +11,15 @@ import { CreatePostDto, CreateTagDto } from '../dto';
 @Controller('posts')
 @UseGuards(AuthGuard())
 export class PostsController {
-  private postAttrs = ['id', 'title', 'body', 'tags', 'profileId', 'createdAt', 'updatedAt'];
+  private postAttrs = [
+    'id',
+    'title',
+    'body',
+    'profileId',
+    'createdAt',
+    'updatedAt',
+    { tags: ['id', 'name'] },
+  ];
 
   constructor(
     private readonly postService: PostsService,
@@ -36,9 +44,7 @@ export class PostsController {
   show(@Param() params): Observable<any> {
     return this.postService
       .findOneById(params.id)
-      .pipe(
-        serialize(this.postAttrs)
-      );
+      .pipe(serialize(this.postAttrs));
   }
 
   @Post()
@@ -65,7 +71,7 @@ export class PostsController {
             tagsParam,
           ),
         ),
-        serialize(this.postAttrs)
+        serialize(this.postAttrs),
       );
   }
 }
