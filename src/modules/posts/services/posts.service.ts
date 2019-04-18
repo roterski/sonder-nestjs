@@ -34,7 +34,7 @@ export class PostsService {
   }
 
   createWithTags(createPostDto: CreatePostDto, createTagDtos: CreateTagDto[]): Observable<Post> {
-    return this.tagsService.getOrCreate(createTagDtos).pipe(
+    return from(this.tagsService.getOrCreate(createTagDtos)).pipe(
       map((tags: Tag[]) => Post.create({ ...createPostDto, tags })),
       switchMap((post: Post) => post.save())
     );
