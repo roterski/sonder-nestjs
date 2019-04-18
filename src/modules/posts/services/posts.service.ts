@@ -22,7 +22,9 @@ export class PostsService {
   }
 
   findOneById(id: number): Observable<Post> {
-    return from(this.postRepository.findOne(id));
+    return from(this.postRepository.findOne(id, {
+      relations: ['tags']
+    }));
   }
 
   create(createPostDto: CreatePostDto): Observable<Post> {

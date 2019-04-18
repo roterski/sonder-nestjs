@@ -198,6 +198,7 @@ describe('Posts Controller', () => {
               expect(body.data).toHaveLength(5);
               expect(_.uniqBy(body.data.map(Object.keys), _.isEqual))
                 .toEqual([['id', 'title', 'body', 'tags', 'profileId', 'createdAt', 'updatedAt']])
+              expect(body.data[0].tags).toHaveLength(2);
             })
             .end(done)
         ));

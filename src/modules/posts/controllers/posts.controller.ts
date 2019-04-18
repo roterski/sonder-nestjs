@@ -4,7 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { map, tap, switchMap, catchError } from 'rxjs/operators';
 import { ProfilesService } from '../../profiles';
 import { CurrentUser } from '../../auth';
-import { serialize, serializeOne } from '../../common'
+import { serialize } from '../../common'
 import { PostsService } from '../services';
 import { CreatePostDto, CreateTagDto } from '../dto';
 
@@ -50,9 +50,14 @@ export class PostsController {
     return this.profilesService
       .getProfile(currentUser.id, postParam.profileId)
       .pipe(
-        switchMap((profile) => profile ?
-          of(profile) :
-          throwError(new UnauthorizedException('profileId does not belong to the user'))
+        switchMap(profile =>
+          profile
+            ? of(profile)
+            : throwError(
+                new UnauthorizedException(
+                  'profileId does not belong to the user',
+                ),
+              ),
         ),
         switchMap(profile =>
           this.postService.createWithTags(
