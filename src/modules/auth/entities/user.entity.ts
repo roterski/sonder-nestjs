@@ -1,14 +1,10 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  BaseEntity,
   Column,
   Index,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  VersionColumn } from 'typeorm';
+  OneToMany } from 'typeorm';
 import { Profile } from '../../profiles';
+import { Tag } from '../../posts';
 import { SonderBaseEntity } from '../../common';
 
 @Entity()

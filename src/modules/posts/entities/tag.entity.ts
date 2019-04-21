@@ -1,13 +1,13 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  BaseEntity,
   Column,
   ManyToMany,
-  JoinTable,
+  ManyToOne,
+  JoinColumn,
   Index,
 } from 'typeorm';
 import { Post } from './post.entity';
+import { User } from '../../auth';
 import { SonderBaseEntity } from '../../common';
 
 @Entity()
@@ -18,4 +18,7 @@ export class Tag extends SonderBaseEntity {
 
   @ManyToMany(type => Post, post => post.tags)
   posts: Post[];
+
+  @Column('int', { nullable: true })
+  createdBy: number;
 }
