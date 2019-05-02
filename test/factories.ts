@@ -2,22 +2,21 @@ import { Factory } from 'typeorm-factory';
 import { name, lorem } from 'faker';
 import { User } from '../src/modules/auth';
 import { Profile } from '../src/modules/profiles';
-import { Post, Tag } from '../src/modules/posts';
+import { Post, Tag, Comment } from '../src/modules/posts';
 import * as bcrypt from 'bcrypt';
 
 export const UserFactory = new Factory(User)
   .sequence('email', (i) => `test_${i}@sonder.com`)
-  .attr('firstName', name.firstName())
+  .sequence('firstName', () => name.firstName())
   .attr('passwordHash', bcrypt.hash('password', 10))
 
 export const ProfileFactory = new Factory(Profile)
-  .attr('name', name.findName());
+  .sequence('name', () => name.findName());
 
-export const DefaultProfileFactory = ProfileFactory
-  .attr('default', true)
+export const ProfileWithUserFactory = ProfileFactory
   .assocOne('user', UserFactory);
 
-export const createUserWithDefaultProfile = async () => {
+export const createUserWithProfile = async () => {
   const user = await UserFactory.create();
   const profile = await ProfileFactory.create({
     userId: user.id,
@@ -26,12 +25,15 @@ export const createUserWithDefaultProfile = async () => {
 }
 
 export const TagFactory = new Factory(Tag)
-  .sequence('name', () => lorem.word());
+  .sequence('name', (i) => `${lorem.word()}-${i}`);
 
 export const PostFactory = new Factory(Post)
-  .attr('title', lorem.sentence())
-  .attr('body', lorem.sentences(5))
-  .assocOne('profile', DefaultProfileFactory);
+  .sequence('title', () => lorem.sentence())
+  .sequence('body', () => lorem.sentences(5))
+  .assocOne('profile', ProfileWithUserFactory);
+
+export const CommentFactory = new Factory(Comment)
+  .sequence('body', () => lorem.sentences());
 
 export const PostWithTagsFactory = (tagCount = 2 ) => PostFactory
   .assocMany('tags', TagFactory, tagCount);

@@ -9,7 +9,7 @@ import {
   authHeader,
 } from '../../../../test/utils';
 import {
-  createUserWithDefaultProfile,
+  createUserWithProfile,
   TagFactory,
   PostWithTagsFactory
 } from '../../../../test/factories';
@@ -43,7 +43,7 @@ describe('Posts Controller', () => {
         .send(params);
 
     beforeEach(async () => {
-      const { user, profile } = await createUserWithDefaultProfile();
+      const { user, profile } = await createUserWithProfile();
       currentUser = user;
       currentProfile = profile;
       existingTag = await TagFactory.create();
@@ -104,7 +104,7 @@ describe('Posts Controller', () => {
       });
 
       beforeEach(async () => {
-        const { user, profile } = await createUserWithDefaultProfile();
+        const { user, profile } = await createUserWithProfile();
         wrongProfile = profile;
       });
 
@@ -179,7 +179,7 @@ describe('Posts Controller', () => {
         .set('Authorization', authHeader(user))
 
     beforeEach(async () => {
-      const { user, profile } = await createUserWithDefaultProfile();
+      const { user, profile } = await createUserWithProfile();
       currentUser = user;
       currentProfile = profile;
     });
@@ -197,7 +197,7 @@ describe('Posts Controller', () => {
             .expect(({ body }) => {
               expect(body.data).toHaveLength(5);
               expect(_.uniqBy(body.data.map(Object.keys), _.isEqual))
-                .toEqual([['id', 'title', 'body', 'tags', 'profileId', 'createdAt', 'updatedAt']])
+                .toEqual([['id', 'title', 'body', 'profileId', 'createdAt', 'updatedAt', 'tags']])
               expect(body.data[0].tags).toHaveLength(2);
             })
             .end(done)

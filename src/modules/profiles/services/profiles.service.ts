@@ -28,14 +28,10 @@ export class ProfilesService {
   }
 
   getProfile(userId: number, id?: number): Observable<Profile> {
-    return id === undefined ? this.getDefault(userId) : this.findOne({ id, userId });
+    return this.findOne({ id, userId });
   }
 
   findOne(query): Observable<Profile> {
     return from(this.profileRepository.findOne(query));
-  }
-
-  getDefault(userId: number): Observable<Profile> {
-    return from(this.profileRepository.findOne({ userId, default: true }));
   }
 }

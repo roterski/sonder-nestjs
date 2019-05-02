@@ -13,13 +13,9 @@ import { Post, Comment } from '../../posts/entities';
 import { SonderBaseEntity } from '../../common';
 
 @Entity()
-@Index(['userId', 'default'], { unique: true })
 export class Profile extends SonderBaseEntity {
   @Column({ nullable: true })
   name: string;
-
-  @Column({ default: false })
-  default: boolean;
 
   @ManyToOne(type => User, user => user.profiles)
   @JoinColumn({ name: 'userId' })
