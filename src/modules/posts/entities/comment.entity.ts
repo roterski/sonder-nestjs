@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Post } from './post.entity';
 import { Profile } from '../../profiles';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class Comment extends SonderBaseEntity {

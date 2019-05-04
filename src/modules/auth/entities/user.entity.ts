@@ -1,15 +1,11 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  BaseEntity,
   Column,
   Index,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  VersionColumn } from 'typeorm';
+  OneToMany } from 'typeorm';
 import { Profile } from '../../profiles';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { Tag } from '../../posts';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class User extends SonderBaseEntity {

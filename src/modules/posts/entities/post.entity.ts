@@ -1,15 +1,17 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  BaseEntity,
   Column,
   OneToMany,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
 } from 'typeorm';
 import { Comment } from './comment.entity';
+import { Tag } from './tag.entity';
+import { PostTag } from './post-tag.entity';
 import { Profile } from '../../profiles';
-import { SonderBaseEntity } from '../../common/entities/SonderBaseEntity';
+import { SonderBaseEntity } from '../../common';
 
 @Entity()
 export class Post extends SonderBaseEntity {
@@ -30,4 +32,11 @@ export class Post extends SonderBaseEntity {
   profile: Profile;
   @Column('int')
   profileId: number;
+
+  @ManyToMany(type => Tag, tag => tag.posts)
+  @JoinTable({ name: 'post_tag' })
+  tags: Tag[];
+
+  @OneToMany(type => PostTag, postTag => postTag.post)
+  postTags: PostTag[];
 }

@@ -24,6 +24,8 @@
     "webpack": "webpack --config webpack.config.js",
     "migration:run": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run",
     "migration:generate": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate",
+    "migration:create": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:create",
+    "migration:seed": "./node_modules/.bin/ts-node seeds/seeds.ts",
     "schema:sync": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm schema:sync",
     "schema:drop": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm schema:drop"
   },

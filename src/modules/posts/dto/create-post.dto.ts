@@ -1,4 +1,4 @@
-import { MinLength } from 'class-validator';
+import { MinLength, IsNotEmpty } from 'class-validator';
 
 export class CreatePostDto {
   @MinLength(3)
@@ -6,5 +6,6 @@ export class CreatePostDto {
 
   body?: string;
 
-  profileId?: number;
+  @IsNotEmpty()
+  profileId: number;
 }

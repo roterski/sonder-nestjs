@@ -14,7 +14,7 @@ export class ProfilesService {
     private readonly profileRepository: Repository<Profile>,
   ) {}
 
-  create(createProfileDto: CreateProfileDto): Profile {
+  build(createProfileDto: CreateProfileDto): Profile {
     return Profile.create(createProfileDto);
   }
 
@@ -23,15 +23,15 @@ export class ProfilesService {
     return from(this.profileRepository.find({ where: { id } }));
   }
 
+  findByUserId(userId: number): Observable<Profile[]> {
+    return from(this.profileRepository.find({ where: { userId }}));
+  }
+
   getProfile(userId: number, id?: number): Observable<Profile> {
-    return id === undefined ? this.getDefault(userId) : this.findOne({ id });
+    return this.findOne({ id, userId });
   }
 
   findOne(query): Observable<Profile> {
     return from(this.profileRepository.findOne(query));
-  }
-
-  getDefault(userId: number): Observable<Profile> {
-    return from(this.profileRepository.findOne({ userId, default: true }));
   }
 }

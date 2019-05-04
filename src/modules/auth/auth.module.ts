@@ -16,7 +16,7 @@ import * as env from 'env-var';
     JwtModule.register({
       secretOrPrivateKey: env.get('APP_SECRET').required().asString(),
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: '30 days',
       },
     }),
     HttpModule

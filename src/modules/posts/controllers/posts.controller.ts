@@ -1,25 +1,41 @@
-import { Controller, Body, Get, Post, UseGuards, Req, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Body, Get, Post, UseGuards, Req, Query, Param, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PostsService } from '../services';
+import { Observable, of, throwError, from } from 'rxjs';
+import { map, tap, switchMap, catchError } from 'rxjs/operators';
 import { ProfilesService } from '../../profiles';
 import { CurrentUser } from '../../auth';
-import { CreatePostDto } from '../dto';
-import { Observable, of } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { serialize, IntArrayParam } from '../../common';
+import { PostsService } from '../services';
+import { CreatePostDto, CreateTagDto } from '../dto';
+import * as _ from 'lodash';
 
 @Controller('posts')
 @UseGuards(AuthGuard())
 export class PostsController {
-  constructor(private readonly postService: PostsService, private readonly profilesService: ProfilesService) {}
+  private postAttrs = [
+    'id',
+    'title',
+    'body',
+    'profileId',
+    'createdAt',
+    'updatedAt',
+    { tags: ['id', 'name'] },
+  ];
+
+  constructor(
+    private readonly postService: PostsService,
+    private readonly profilesService: ProfilesService,
+  ) {}
 
   @Get()
-  index(@Req() request): Observable<any> {
-    return this.postService.findAll().pipe(
-      map(posts => ({
-        data: posts,
+  index(@IntArrayParam('tags') tagIds): Observable<any> {
+    return from(this.postService.findAll(tagIds)).pipe(
+      serialize(this.postAttrs),
+      map(({ data }) => ({
+        data,
         page: 1,
-        perPage: posts.length,
-        totalEntries: posts.length,
+        perPage: data.length,
+        totalEntries: data.length,
         totalPages: 1,
       })),
     );
@@ -29,16 +45,34 @@ export class PostsController {
   show(@Param() params): Observable<any> {
     return this.postService
       .findOneById(params.id)
-      .pipe(map(post => ({ data: post })));
+      .pipe(serialize(this.postAttrs));
   }
 
   @Post()
-  create(@Body('post') postParam: CreatePostDto, @CurrentUser() currentUser): Observable<any> {
+  create(
+    @Body('post') postParam: CreatePostDto,
+    @Body('tags') tagsParam: CreateTagDto[],
+    @CurrentUser() currentUser,
+  ): Observable<any> {
     return this.profilesService
       .getProfile(currentUser.id, postParam.profileId)
       .pipe(
-        switchMap((profile) => this.postService.create({...postParam, profileId: profile.id })),
-        map(post => ({ data: post })),
+        switchMap(profile =>
+          profile
+            ? of(profile)
+            : throwError(
+                new UnauthorizedException(
+                  'profileId does not belong to the user',
+                ),
+              ),
+        ),
+        switchMap(profile =>
+          this.postService.createWithTags(
+            { ...postParam, profileId: profile.id },
+            tagsParam,
+          ),
+        ),
+        serialize(this.postAttrs),
       );
   }
 }

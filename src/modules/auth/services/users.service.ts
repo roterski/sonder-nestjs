@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getManager } from 'typeorm';
+import { Repository, getManager, getConnection } from 'typeorm';
 import { User } from '../entities';
 import { CreateUserDto } from '../dto';
 import { ProfilesService } from '../../profiles';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { Observable, from, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -29,20 +29,33 @@ export class UsersService {
     return from(this.userRepository.findOne(query));
   }
 
-  create(createUserDto: CreateUserDto): Observable<User> {
-    return from(getManager().transaction(async (transactionalEntityManager) => {
-      const user = await transactionalEntityManager.save(User.create(createUserDto));
-      const profileAttrs = {
+  create(createUserDto: CreateUserDto): Observable<User | {}> {
+    const queryRunner = getConnection().createQueryRunner();
+    let createdUser: User;
+
+    return from(queryRunner.connect()).pipe(
+      switchMap(() => from(queryRunner.startTransaction())),
+      map(() => User.create(createUserDto)),
+      switchMap((user: User) => from(queryRunner.manager.save(user))),
+      tap((user: User) => (createdUser = user)),
+      map((user: User) => ({
         name: user.firstName,
         userId: user.id,
         default: true
-      };
-      await transactionalEntityManager.save(this.profilesService.create(profileAttrs));
-      return user;
-    }));
+      })),
+      map((profileAttrs) => this.profilesService.build(profileAttrs)),
+      switchMap((profile) => from(queryRunner.manager.save(profile))),
+      switchMap(() => from(queryRunner.commitTransaction())),
+      switchMap(() => from(queryRunner.release())),
+      map(() => createdUser),
+      catchError(() => {
+        queryRunner.rollbackTransaction();
+        return queryRunner.release();
+      })
+    );
   }
 
-  getOrCreate(createUserDto: CreateUserDto, findBy: string[]): Observable<User> {
+  getOrCreate(createUserDto: CreateUserDto, findBy: string[]): Observable<User | {}> {
     return from(User.findOne(_.pick(createUserDto, findBy)))
       .pipe(
         switchMap((user) => user ? of(user) : this.create(createUserDto))
