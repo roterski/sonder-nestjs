@@ -2,11 +2,13 @@ import {
   Entity,
   Column,
   ManyToMany,
+  OneToMany,
   ManyToOne,
   JoinColumn,
   Index,
 } from 'typeorm';
 import { Post } from './post.entity';
+import { PostTag } from './post-tag.entity';
 import { User } from '../../auth';
 import { SonderBaseEntity } from '../../common';
 
@@ -18,6 +20,9 @@ export class Tag extends SonderBaseEntity {
 
   @ManyToMany(type => Post, post => post.tags)
   posts: Post[];
+
+  @OneToMany(type => PostTag, postTag => postTag.post)
+  postTags: PostTag[];
 
   @Column('int', { nullable: true })
   createdBy: number;

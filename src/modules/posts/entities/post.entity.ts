@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Comment } from './comment.entity';
 import { Tag } from './tag.entity';
+import { PostTag } from './post-tag.entity';
 import { Profile } from '../../profiles';
 import { SonderBaseEntity } from '../../common';
 
@@ -33,6 +34,9 @@ export class Post extends SonderBaseEntity {
   profileId: number;
 
   @ManyToMany(type => Tag, tag => tag.posts)
-  @JoinTable()
+  @JoinTable({ name: 'post_tag' })
   tags: Tag[];
+
+  @OneToMany(type => PostTag, postTag => postTag.post)
+  postTags: PostTag[];
 }

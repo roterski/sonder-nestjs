@@ -1,42 +1,57 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getManager, getConnection } from 'typeorm';
+import { Repository, getManager, getConnection, In, createQueryBuilder } from 'typeorm';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, tap, catchError, partition, merge, reduce } from 'rxjs/operators';
-import { Post, Tag } from '../entities';
+import { Post, Tag, PostTag } from '../entities';
 import { CreatePostDto, CreateTagDto } from '../dto';
 import { TagsService } from './tags.service';
+import * as _ from 'lodash';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(PostTag)
+    private readonly postTagRepository: Repository<PostTag>,
     private tagsService: TagsService,
-  ) { }
+  ) {}
 
-  findAll(): Observable<Post[]> {
-    return from(this.postRepository.find({
-      relations: ['tags']
-    }));
-  }
 
-  findOneById(id: number): Observable<Post> {
-    return from(this.postRepository.findOne(id, {
-      relations: ['tags']
-    }));
-  }
+  findAll(tagIds: number[]): Observable<Post[]> {
+    const tagsFilter$ = from(this.postTagRepository.find({
+      where: { tagId: In(tagIds) }
+    })).pipe(
+      map((postTags: PostTag[]) => _.uniq(postTags.map(({ postId }) => postId))),
+      map((postIds: number[]) => ({ where: { id: In(postIds) } }))
+    );
 
-  create(createPostDto: CreatePostDto): Observable<Post> {
-    return of(Post.create(createPostDto)).pipe(
-      switchMap(post => post.save()),
+    return ( tagIds.length > 0 ? tagsFilter$ : of({})).pipe(
+      map((filter) => ({...filter, relations: ['tags'] })),
+      switchMap((options) => from(this.postRepository.find(options)))
     );
   }
 
-  createWithTags(createPostDto: CreatePostDto, createTagDtos: CreateTagDto[]): Observable<Post> {
+  findOneById(id: number): Observable<Post> {
+    return from(
+      this.postRepository.findOne(id, {
+        relations: ['tags'],
+      }),
+    );
+  }
+
+  create(createPostDto: CreatePostDto): Observable<Post> {
+    return of(Post.create(createPostDto)).pipe(switchMap(post => post.save()));
+  }
+
+  createWithTags(
+    createPostDto: CreatePostDto,
+    createTagDtos: CreateTagDto[],
+  ): Observable<Post> {
     return from(this.tagsService.getOrCreate(createTagDtos)).pipe(
       map((tags: Tag[]) => Post.create({ ...createPostDto, tags })),
-      switchMap((post: Post) => post.save())
+      switchMap((post: Post) => post.save()),
     );
   }
 }

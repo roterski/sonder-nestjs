@@ -6,7 +6,7 @@ const serializeOne = (data, attrs) => (
   attrs.reduce((acc, attr) => {
     if (_.isObject(attr)) {
       const key = Object.keys(attr)[0];
-      acc[key] = serializeNode(data[key], attr[key]);
+      acc[key] = data[key] && attr[key] && serializeNode(data[key], attr[key]);
     } else {
       acc[attr] = data[attr];
     }

@@ -19,6 +19,6 @@ export abstract class SonderBaseEntity extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @VersionColumn()
+  @VersionColumn({ default: 1 })
   version: number;
 }

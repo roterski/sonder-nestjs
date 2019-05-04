@@ -1,12 +1,13 @@
-import { Controller, Body, Get, Post, UseGuards, Req, Param, UnauthorizedException } from '@nestjs/common';
+import { Controller, Body, Get, Post, UseGuards, Req, Query, Param, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
 import { map, tap, switchMap, catchError } from 'rxjs/operators';
 import { ProfilesService } from '../../profiles';
 import { CurrentUser } from '../../auth';
-import { serialize } from '../../common'
+import { serialize, IntArrayParam } from '../../common';
 import { PostsService } from '../services';
 import { CreatePostDto, CreateTagDto } from '../dto';
+import * as _ from 'lodash';
 
 @Controller('posts')
 @UseGuards(AuthGuard())
@@ -27,8 +28,8 @@ export class PostsController {
   ) {}
 
   @Get()
-  index(@Req() request): Observable<any> {
-    return this.postService.findAll().pipe(
+  index(@IntArrayParam('tags') tagIds): Observable<any> {
+    return from(this.postService.findAll(tagIds)).pipe(
       serialize(this.postAttrs),
       map(({ data }) => ({
         data,

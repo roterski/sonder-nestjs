@@ -3,12 +3,12 @@ import { POSTS_CONTROLLERS } from './controllers';
 import { PassportModule } from '@nestjs/passport';
 import { POSTS_SERVICES } from './services';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post, Comment, Tag } from './entities';
+import { Post, Comment, Tag, PostTag } from './entities';
 import { ProfilesService, Profile } from '../profiles';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, Comment, Tag, Profile]),
+    TypeOrmModule.forFeature([Post, Comment, Tag, Profile, PostTag]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   providers: [...POSTS_SERVICES, ProfilesService],
